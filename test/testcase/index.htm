@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Тесты crossjs</title>
+    <script type="text/javascript" src="testcase.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+
+    <script type="text/javascript">
+        CoreTest.runOnLoad();
+        ClassTest.runOnLoad();
+        ElementTest.runOnLoad();
+        ObserverTest.runOnLoad();
+        TypeofTest.runOnLoad();
+        ArrayTest.runOnLoad();
+        FunctionTest.runOnLoad();
+        DateTest.runOnLoad();
+        StringTest.runOnLoad();
+    </script>
+</head>
+<body>
+    <!-- core.js -->
+    <div class="test1" id="d1"></div>
+    <div class="test2 test1" id="d2"></div>
+    <div class="test3"></div>
+    <div class="test3" id="d3"></div>
+    <!-- /core.js -->
+
+    <!-- Element.js -->
+    <div id="remove1"></div>
+    <div id="remove2"></div>
+
+    <div id="className" class="class1 class2 class3"></div>
+
+    <div id="getParent1" class="parent1 parent2">
+        <div id="getParent2" class="parent3">
+            <div id="getParent3"></div>
+        </div>
+    </div>
+    <!-- /Element.js -->
+</body>
+</html>
