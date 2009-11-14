@@ -67,7 +67,7 @@
     //#label filter
     /**
      * Возвращает массив, содержащий только те элементы исходного массива, для которых fn вернула
-     * истинное значение. Вызов fn аналогичен {@link #forEach}.
+     * истинное значение. Вызов fn аналогичен {@link A#forEach}.
      * @param {Function} fn Callback-функция.
      * @param {Object} scope Контекст вызова.
      * @return {Array} Результирующий массив.
@@ -309,4 +309,15 @@
         });
     };
     //#endlabel unique
+
+    //#label shuffle
+    /**
+     * Перемешивает элементы массива.
+     */
+    A.shuffle = function() {
+        this.sort(function() {
+            return Math.random() > 0.5 ? 1 : -1;
+        });
+    };
+    //#endlabel shuffle
 })(Array.prototype);

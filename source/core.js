@@ -1,7 +1,7 @@
 /**
  * Возвращает DOM-элемент по его id, или переданный параметр.
  * @param {String/HTMLElement} element Если строка, то возвращается элемент с таким id, иначе переданный аргумент.
- * @return {HTMLElement}
+ * @return {Element}
  */
 function $(element) {
     return typeof element == 'string' ? document.getElementById(element) : element;
@@ -114,6 +114,27 @@ function createSelectorFilter(selector) {
     };
 }
 //#endlabel createSelectorFilter
+
+//#label range
+/**
+ * Возвращает массив, содержащий count последовательных чисел, начиная со start. Если передан только один
+ * аргумент, то он считается количеством элементов, а отсчет производится с нуля.
+ * @param {Number} start Стартовое число.
+ * @param {Number} count Количество элементов.
+ * @return {Array} Массив последовательных чисел.
+ */
+function range(start, count) {
+    if (arguments.length == 1) {
+        count = start;
+        start = 0;
+    }
+    var a = [];
+    for (var i = start; i < start + count; i++) {
+        a.push(i);
+    }
+    return a;
+}
+//#endlabel range
 
 //#label exec
 /**
