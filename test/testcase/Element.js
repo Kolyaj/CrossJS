@@ -23,6 +23,9 @@ var ElementTest = TestCase.create({
         this.assertTrue(el.classExists('class1'));
         this.assertTrue(el.classExists('class3'));
         this.assertTrue(el.classExists('class4'));
+        el.addClass('class4');
+        el.removeClass('class4');
+        this.assertFalse(el.classExists('class4'));
     },
 
     testGetParent: function() {

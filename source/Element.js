@@ -131,7 +131,10 @@ function $E(el) {
      */
     M.removeClass = function(el, cl) {
         el = $(el);
-        el.className = el.className.replace(new RegExp('(^|\\s)' + cl + '(\\s|$)', 'g'), ' ');
+        var className = el.className.replace(new RegExp('\\b' + cl + '\\b', 'g'), ' ');
+        if (className != el.className) {
+            el.className = className;
+        }
     };
     //#endlabel removeClass
 
@@ -259,5 +262,23 @@ function $E(el) {
         }
     };
     //#endlabel un
+
+    //#label initHover
+    //#include_once "self::addClass::removeClass::on"
+    //#include_once "lang/Function.js::bind"
+    /**
+     * Инициализирует реакцию на наведение и убирание мыши на элементе. После вызова этой функции при наведении
+     * указателя мыши на элемент ему добавляется класс className, при убирании указателя с элемента класс,
+     * соответственно, удаляется.
+     * @param {Element/String} el Элемент или id элемента, у которого инициализируется hover.
+     * @param {String} className Добавляемое/удаляемое имя класса. 
+     */
+    M.initHover = function(el, className) {
+        $E.on(el, {
+            mouseover: $E.addClass.bind($E, el, className),
+            mouseout: $E.removeClass.bind($E, el, className)
+        });
+    };
+    //#endlabel initHover
 })($E.Methods = {});
 apply($E, $E.Methods);
