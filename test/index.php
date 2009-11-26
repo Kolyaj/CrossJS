@@ -30,6 +30,7 @@
         <li>Element.js <?= getDoctypes("element.php") ?></li>
         <li>Работа с событиями <?= getDoctypes("event.php") ?></li>
         <li><a href="xhr.php" target="_blank">XHR.js</a></li>
+        <li><a href="timer.php" target="_blank">Timer.js</a></li>
         <li><a href="anim.php" target="_blank">Anim.js</a></li>
     </ul>
 </body>
