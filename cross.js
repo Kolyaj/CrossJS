@@ -11,6 +11,8 @@
 //#include_once "source/lang/Array.js"
 //#include_once "source/lang/Date.js"
 //#include_once "source/lang/Function.js"
+//#include_once "source/lang/Number.js"
 //#include_once "source/lang/JSON.js"
 //#include_once "source/lang/String.js"
 //#include_once "source/lang/XMLHttpRequest.js"
+//#include_once "source/Timer.js"
