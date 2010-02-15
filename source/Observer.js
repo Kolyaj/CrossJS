@@ -1,4 +1,4 @@
-//#include_once "lang/Array.js::map::filter::any"
+//#include_once "lang/Array.js::map::filter::some"
 //#include_once "lang/Function.js::bind"
 
 /**
