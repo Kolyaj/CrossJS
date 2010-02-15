@@ -42,4 +42,10 @@ var EventObject = {};
         }
     };
     //#endlabel stop
+
+    //#label isLeftClick
+    E.isLeftClick = function() {
+        return (this.which && this.which == 1) || (this.button && this.button == 1);
+    };
+    //#endlabel isLeftClick
 })(EventObject);
