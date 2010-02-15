@@ -17,15 +17,15 @@ var CoreTest = TestCase.create({
                 return e.id;
             }
         }));
-        this.assertEquals('d1d2d3', $$('div', {
+        this.assertEquals('d10d21d32', $$('div', {
             filter: function(e) {
                 return e.id && /^test[123]/.test(e.className);
             },
             map: function(e) {
                 return e.id;
             },
-            reduce: function(str, id) {
-                return str + id;
+            reduce: function(str, id, index) {
+                return str + id + index;
             },
             reduceInit: ''
         }));
