@@ -70,6 +70,7 @@ Timer.Timer = Class.create({
  * Перебирает элементы массива с задержкой после каждого элемента.
  * @param {Number} delay Задержка в миллисекундах.
  * @param {Function} fn Функция, вызываемая во время каждой итерации. Передаются элемент массива, индекс и сам массив.
+ * Если вернет false, то обработка массива прекращается.
  * @param {Function} finish Функция, вызываемая по окончанию перебора. Первым параметром передается сам массив.
  * @param {Object} scope Контекст вызова функций fn и finish.
  */
@@ -77,14 +78,15 @@ Array.prototype.deferForEach = function(delay, fn, finish, scope) {
     var i = 0;
     if (this.length) {
         new Timer(delay).on('timer', function(evt) {
-            fn.call(scope, this[i], i, this);
-            if (++i >= this.length) {
+            if (fn.call(scope, this[i], i, this) === false || ++i >= this.length) {
                 evt.target.un('timer', arguments.callee, this);
                 if (finish) {
                     finish.call(scope, this);
                 }
             }
         }, this);
+    } else {
+        finish.call(scope, this);
     }
 };
 //#endlabel deferForEach
