@@ -5,8 +5,8 @@
  * Расширяет DOM-элемент методами из объекта $E.Methods. Все методы также доступны через $E.method(el, ...).
  * Таким образом, есть два способа работы: расширение элемента ($E('elId').remove(), $E(el).getStyle('width')) и
  * непосредственный доступ к методам ($E.remove('elId'), $E.getStyle(el, 'width')).
- * @param {Element/String} el DOM-элемент или id элемента.
- * @return {Element} Элемент с добавленными методами.
+ * @param {Node/String} el DOM-элемент или id элемента.
+ * @return {Node} Элемент с добавленными методами.
  */
 function $E(el) {
     el = $(el);
@@ -22,7 +22,7 @@ function $E(el) {
     //#label remove
     /**
      * Удаляет элемент из DOM-дерева.
-     * @param {Element/String} el Удаляемый элемент или его id.
+     * @param {Node/String} el Удаляемый элемент или его id.
      */
     M.remove = function(el) {
         el = $(el);
@@ -36,7 +36,7 @@ function $E(el) {
     //#include_once "lang/String.js::camelize"
     /**
      * Возвращает значение css-свойства элемента.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {String} style Имя свойства
      * @return {String} Значение свойства.
      */
@@ -59,7 +59,7 @@ function $E(el) {
     //#include_once "lang/String.js::camelize"
     /**
      * Устанавливает CSS-свойства элементу. Прозрачно устанавливает opacity и cssFloat в IE.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {Object} style Хэш-объект со свойствами, вида {width: '100px', height: '100px', ...}.
      */
     M.setStyle = function(el, style) {
@@ -78,7 +78,7 @@ function $E(el) {
     //#include_once "core.js::getDocumentScroll::getRootElement"
     /**
      * Возвращает смещение элемента относительно окна браузера.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @return {Array} Массив целых чисел вида [left, top].
      */
     M.offset = function(el) {
@@ -103,7 +103,7 @@ function $E(el) {
     //#label classExists
     /**
      * Возвращает true, если CSS-класс cl установлен у элемента el.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя проверяемого класса.
      * @return {Boolean}
      */
@@ -115,26 +115,30 @@ function $E(el) {
     //#label addClass
     /**
      * Добавляет CSS-класс элементу.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя добавляемого класса.
+     * @return {Node} Переданный узел.
      */
     M.addClass = function(el, cl) {
         $(el).className += ' ' + cl;
+        return el;
     };
     //#endlabel endClass
 
     //#label removeClass
     /**
      * Удаляет CSS-класс у элемента.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя удаляемого класса.
+     * @return {Node} Переданный узел.
      */
     M.removeClass = function(el, cl) {
         el = $(el);
-        var className = el.className.replace(new RegExp('\\b' + cl + '\\b', 'g'), ' ');
+        var className = el.className.replace(new RegExp('($|\\s)' + cl + '(?=\\s|$)', 'g'), ' ');
         if (className != el.className) {
             el.className = className;
         }
+        return el;
     };
     //#endlabel removeClass
 
@@ -143,11 +147,11 @@ function $E(el) {
     /**
      * Возращает родителя элемента. Если указан selector, то производит поиск вверх по цепочке родителей, пока
      * не будет найден элемент, удовлетворяющий условию.
-     * @param {Element/String} el Элемент или его id.
+     * @param {Node/String} el Элемент или его id.
      * @param {String} selector Строка формата, соответствующего формату аргумента {@link #createSelectorFilter}.
      * @param {Number} depth Глубина просмотра дерева, если указан selector.
      * @param {Boolean} includeSelf Если true, то на соответствие селектору проверяется и сам элемент.
-     * @return {Element} Найденный родитель или null.
+     * @return {Node} Найденный родитель или null.
      */
     M.getParent = function(el, selector, depth, includeSelf) {
         if (!depth || depth <= 0) {
@@ -194,7 +198,7 @@ function $E(el) {
         scope: this
     });
      * Вместе с именами событий в таком формате можно передавать параметры scope и single.
-     * @param {Element/String} element Элемент или id элемента, событие которого обрабатывается.
+     * @param {Node/String} element Элемент или id элемента, событие которого обрабатывается.
      * @param {String} name Имя события.
      * @param {Function} handler Обработчик события.
      * @param {Object} scope Контекст вызова обработчика.
@@ -234,7 +238,7 @@ function $E(el) {
      * Снимает обработчик handler события name у элемента element. Все четыре параметра должны быть теми же,
      * что и при назначении обработчика методом {@link M#on}. Обработчики событий, назначенные не методом {@link M#on},
      * этим методом не отменяются. Возможно групповое снятие обработчиков в том же формате, что и в {@link M#on}.
-     * @param {Element/String} element Элемент или id элемента, у которого отменяется событие.
+     * @param {Node/String} element Элемент или id элемента, у которого отменяется событие.
      * @param {String} name Имя события.
      * @param {Function} handler Назначенный обработчик.
      * @param {Object} scope Контекст вызова обработчика.
@@ -270,7 +274,7 @@ function $E(el) {
      * Инициализирует реакцию на наведение и убирание мыши на элементе. После вызова этой функции при наведении
      * указателя мыши на элемент ему добавляется класс className, при убирании указателя с элемента класс,
      * соответственно, удаляется.
-     * @param {Element/String} el Элемент или id элемента, у которого инициализируется hover.
+     * @param {Node/String} el Элемент или id элемента, у которого инициализируется hover.
      * @param {String} className Добавляемое/удаляемое имя класса. 
      */
     M.initHover = function(el, className) {
