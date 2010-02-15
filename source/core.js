@@ -75,13 +75,14 @@ function $$(selector, options) {
             if (single) {
                 return el;
             }
-            var value = typeof options.map == 'function' ? options.map.call(options.scope, el, j++) : el;
+            var value = typeof options.map == 'function' ? options.map.call(options.scope, el, j) : el;
             if (typeof options.reduce == 'function') {
-                reduceValue = reduceInitialized ? options.reduce.call(options.scope, reduceValue, value, j++) : value;
+                reduceValue = reduceInitialized ? options.reduce.call(options.scope, reduceValue, value, j) : value;
                 reduceInitialized = true;
             } else {
                 result.push(value);
             }
+            j++;
         }
     }
     return typeof options.reduce == 'function' ? reduceValue : result;
@@ -149,7 +150,7 @@ function random(start, end) {
         end = start;
         start = 0;
     }
-    return Math.random() * (end - start) + start;
+    return Math.round(Math.random() * (end - start)) + start;
 }
 //#endlabel random
 
