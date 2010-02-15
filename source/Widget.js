@@ -1,7 +1,7 @@
 //#include_once "core.js::$$"
 //#include_once "Component.js::base"
 //#include_once "lang/String.js::format"
-//#include_once "Element.js::base"
+//#include_once "Element.js::on::un::remove"
 
 /**
  * @class Widget
@@ -52,6 +52,11 @@ var Widget = Class.extend(Component, {
             $(this.renderTo).appendChild(this.el);
         }
         this._elsCache = {};
+    },
+
+    destroy: function() {
+        this.getEl().remove();
+        this.fireEvent('destroy');
     },
 
     /**
