@@ -56,7 +56,7 @@ alert(S() === s1);   // true
     extend: function(baseClass, proto) {
         var F = function() {};
         F.prototype = baseClass.prototype;
-        var klass = this.create(apply(new F(), proto || {}));
+        var klass = Class.create(apply(new F(), proto || {}));
         klass.superclass = baseClass.prototype;
         return klass;
     }
