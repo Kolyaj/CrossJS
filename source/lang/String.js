@@ -1,3 +1,4 @@
+//todo Добавить методы startsWith, endsWith
 //#label queryCodecOptions
 String.queryCodecOptions = {
     encode: encodeURIComponent,
@@ -213,6 +214,16 @@ String.fromQueryParams = function(object) {
                 return before + f(data && data[name]);
             }
         });
+    };
+
+    /**
+     * Статический метод. Вызывает метод format в контексте строки str с аргументами args.
+     * @param {String} str Форматируемая строка.
+     * @param {Array} args Аргументы, передаваемые в {@link S.format}.
+     * @return {String}
+     */
+    String.format = function(str, args) {
+        return S.format.apply(str, args);
     };
     //#endlabel format
 
