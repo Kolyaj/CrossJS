@@ -82,7 +82,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
     F.defer = function(millis, scope, args) {
         var that = this;
         window.setTimeout(function() {
-            that.apply(scope, args);
+            that.apply(scope, args || []);
         }, millis);
     };
     //#endlabel defer
