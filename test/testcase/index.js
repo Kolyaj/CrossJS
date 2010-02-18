@@ -7,6 +7,7 @@
 //#include_once "../../source/lang/Array.js"
 //#include_once "../../source/lang/Date.js"
 //#include_once "../../source/lang/String.js"
+//#include_once "../../source/cookie.js"
 
 //#include_once "core.js"
 //#include_once "Class.js"

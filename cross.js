@@ -16,3 +16,4 @@
 //#include_once "source/lang/String.js"
 //#include_once "source/lang/XMLHttpRequest.js"
 //#include_once "source/Timer.js"
+//#include_once "source/cookie.js"

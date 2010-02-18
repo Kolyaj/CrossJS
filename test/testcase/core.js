@@ -33,5 +33,12 @@ var CoreTest = TestCase.create({
 
     testGetWindow: function() {
         this.assertSame(window, getWindow(document));
+    },
+
+    testCookie: function() {
+        createCookie('foo', 'bar');
+        this.assertEquals('bar', readCookie('foo'));
+        eraseCookie('foo');
+        this.assertNull(readCookie('foo'));
     }
 });
