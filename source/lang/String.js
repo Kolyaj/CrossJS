@@ -1,4 +1,3 @@
-//todo Добавить методы startsWith, endsWith
 //#label queryCodecOptions
 String.queryCodecOptions = {
     encode: encodeURIComponent,
@@ -241,4 +240,26 @@ String.fromQueryParams = function(object) {
         return result;
     };
     //#endlabel times
+
+    //#label startsWith
+    /**
+     * Проверяет, начинается ли строка с search.
+     * @param {String} search
+     * @return {Boolean}
+     */
+    S.startsWith = function(search) {
+        return this.indexOf(search) == 0;
+    };
+    //#endlabel startsWith
+
+    //#label endsWith
+    /**
+     * Проверяет, заканчивается ли строка на search.
+     * @param {String} search
+     * @return {Boolean}
+     */
+    S.endsWith = function(search) {
+        return this.length > search.length && this.indexOf(search) == this.length - search.length;
+    };
+    //#endlabel endsWith
 })(String.prototype);

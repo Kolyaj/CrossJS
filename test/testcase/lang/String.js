@@ -77,5 +77,16 @@ var StringTest = TestCase.create({
 
     testTimes: function() {
         this.assertEquals('123123123123', '123'.times(4));
+    },
+
+    testStartsWith: function() {
+        this.assertTrue('abcdefg'.startsWith('abcd'));
+        this.assertFalse('abcdefg'.startsWith('123'));
+    },
+
+    testEndsWith: function() {
+        this.assertTrue('abcdefg'.endsWith('efg'));
+        this.assertFalse('abc'.endsWith('1abc'));
+        this.assertFalse('abcdefg'.endsWith('123'));
     }
 });
