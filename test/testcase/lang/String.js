@@ -71,8 +71,8 @@ var StringTest = TestCase.create({
     },
 
     testFormat: function() {
-        this.assertEquals('0123456789', '0#{a}34#{b}89'.format({a: '12', b: '567'}));
-        this.assertEquals('012#{34}56789', '0#{0}\\#{34}56#{1}9'.format(12, 78));
+        this.assertEquals('0123456789', '0${a}34${b}89'.format({a: '12', b: '567'}));
+        this.assertEquals('012${34}56789', '0${0}\\${34}56${1}9'.format(12, 78));
     },
 
     testTimes: function() {

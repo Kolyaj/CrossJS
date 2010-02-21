@@ -194,8 +194,8 @@ String.fromQueryParams = function(object) {
     //#label format
     /**
      * Форматирует строку, заменяя в ней <ul>
-     *     <li>шаблоны вида #{number}, где number -- положительное число, на number по счету параметр.</li>
-     *     <li>шаблоны вида #{string} на значение свойства string первого переданного аргумента.</li>
+     *     <li>шаблоны вида ${number}, где number -- положительное число, на number по счету параметр.</li>
+     *     <li>шаблоны вида ${string} на значение свойства string первого переданного аргумента.</li>
      * </ul> Если решетка экранирована символом \, то замена не производится.
      * @return {String}
      */
@@ -204,7 +204,7 @@ String.fromQueryParams = function(object) {
         function f(value) {
             return typeof value == 'undefined' || value == null ? '' : value;
         }
-        return this.replace(/(^|.|\r|\n)(#\{(.*?)\})/g, function(ignore, before, template, name) {
+        return this.replace(/(^|.|\r|\n)(\$\{(.*?)\})/g, function(ignore, before, template, name) {
             if (before == '\\') {
                 return template;
             } else if (/^[0-9]+$/.test(name)) {
