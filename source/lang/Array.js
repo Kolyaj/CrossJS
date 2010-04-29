@@ -7,9 +7,11 @@
      * @return {Number} Индекс элемента или -1, если не найден.
      */
     A.indexOf = A.indexOf || function(object) {
-        for (var i = 0; i < this.length; i++)
-            if (i in this && this[i] == object)
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && this[i] == object) {
                 return i;
+            }
+        }
         return -1;
     };
     //#endlabel indexOf
@@ -22,9 +24,11 @@
      * @return {Number} Индекс элемента или -1, если не найден.
      */
     A.lastIndexOf = A.lastIndexOf || function(object) {
-        for (var i = this.length - 1; i >= 0; i--)
-            if (i in this && this[i] == object)
+        for (var i = this.length - 1; i >= 0; i--) {
+            if (i in this && this[i] == object) {
                 return i;
+            }
+        }
         return -1;
     };
     //#endlabel lastIndexOf
@@ -41,9 +45,11 @@
      * @param {Object} scope Контекст вызова.
      */
     A.forEach = A.forEach || function(fn, scope) {
-        for (var i = 0; i < this.length; i++)
-            if (i in this)
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this) {
                 fn.call(scope, this[i], i, this);
+            }
+        }
     };
     //#endlabel forEach
 
@@ -57,9 +63,11 @@
      */
     A.map = A.map || function(fn, scope) {
         var result = [];
-        for (var i = 0; i < this.length; i++)
-            if (i in this)
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this) {
                 result[i] = fn.call(scope, this[i], i, this);
+            }
+        }
         return result;
     };
     //#endlabel map
@@ -67,16 +75,18 @@
     //#label filter
     /**
      * Возвращает массив, содержащий только те элементы исходного массива, для которых fn вернула
-     * истинное значение. Вызов fn аналогичен {@link A#forEach}.
+     * истинное значение. Вызов fn аналогичен {@link #forEach}.
      * @param {Function} fn Callback-функция.
      * @param {Object} scope Контекст вызова.
      * @return {Array} Результирующий массив.
      */
     A.filter = A.filter || function(fn, scope) {
         var result = [];
-        for (var i = 0; i < this.length; i++)
-            if (i in this && fn.call(scope, this[i], i, this))
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && fn.call(scope, this[i], i, this)) {
                 result.push(this[i]);
+            }
+        }
         return result;
     };
     //#endlabel filter
@@ -90,9 +100,11 @@
      * @return {Boolean}
      */
     A.every = A.every || function(fn, scope) {
-        for (var i = 0; i < this.length; i++)
-            if (i in this && !fn.call(scope, this[i], i, this))
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && !fn.call(scope, this[i], i, this)) {
                 return false;
+            }
+        }
         return true;
     };
     //#endlabel every
@@ -107,9 +119,11 @@
      * @return {Boolean}
      */
     A.some = A.some || function(fn, scope) {
-        for (var i = 0; i < this.length; i++)
-            if (i in this && fn.call(scope, this[i], i, this))
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && fn.call(scope, this[i], i, this)) {
                 return true;
+            }
+        }
         return false;
     };
     //#endlabel some
@@ -130,18 +144,22 @@
     A.reduce = A.reduce || function(fn, init) {
         var i = 0, l = this.length;
         if (arguments.length < 2) {
-            if (this.length == 0)
+            if (this.length == 0) {
                 throw new TypeError('reduce of empty array with no initial value');
-            for (; i < l; i++)
+            }
+            for (; i < l; i++) {
                 if (i in this) {
                     init = this[i];
                     i++;
                     break;
                 }
+            }
         }
-        for (; i < l; i++)
-            if (i in this)
+        for (; i < l; i++) {
+            if (i in this) {
                 init = fn(init, this[i], i, this);
+            }
+        }
         return init;
     };
     //#endlabel reduce
@@ -156,18 +174,22 @@
     A.reduceRight = A.reduceRight || function(fn, init) {
         var i = this.length - 1;
         if (arguments.length < 2) {
-            if (this.length == 0)
+            if (this.length == 0) {
                 throw new TypeError('reduce of empty array with no initial value');
-            for (; i >= 0; i--)
+            }
+            for (; i >= 0; i--) {
                 if (i in this) {
                     init = this[i];
                     i--;
                     break;
                 }
+            }
         }
-        for (; i >= 0; i--)
-            if (i in this)
+        for (; i >= 0; i--) {
+            if (i in this) {
                 init = fn(init, this[i], i, this);
+            }
+        }
         return init;
     };
     //#endlabel reduceRight
@@ -192,9 +214,10 @@
      * @return {mixed}
      */
     A.first = function(fn, scope) {
-        for (var i = 0; i < this.length; i++) {
-            if (i in this && (!fn || fn.call(scope, this[i], i, this)))
+        for (var i = 0, l = this.length; i < l; i++) {
+            if (i in this && (!fn || fn.call(scope, this[i], i, this))) {
                 return this[i];
+            }
         }
         return null;
     };
@@ -210,9 +233,11 @@
      * @return {mixed}
      */
     A.last = function(fn, scope) {
-        for (var i = this.length - 1; i >= 0; i--) 
-            if (i in this && (!fn || fn.call(scope, this[i], i, this)))
+        for (var i = this.length - 1; i >= 0; i--) {
+            if (i in this && (!fn || fn.call(scope, this[i], i, this))) {
                 return this[i];
+            }
+        }
         return null;
     };
     //#endlabel last
@@ -224,9 +249,11 @@
      * @return {Boolean}
      */
     A.include = function() {
-        for (var i = 0; i < arguments.length; i++)
-            if (this.indexOf(arguments[i]) == -1)
+        for (var i = 0; i < arguments.length; i++) {
+            if (this.indexOf(arguments[i]) == -1) {
                 return false;
+            }
+        }
         return true;
     };
     //#endlabel include
@@ -268,8 +295,9 @@
      */
     A.flatten = function() {
         return this.reduce(function(result, value) {
-            if (Object.prototype.toString.call(value) == '[object Array]')
+            if (Object.prototype.toString.call(value) == '[object Array]') {
                 return result.concat(value.flatten());
+            }
             result.push(value);
             return result;
         }, []);
