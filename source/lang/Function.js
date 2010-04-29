@@ -36,8 +36,9 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
         return function() {
             args = arguments;
             that = this;
-            if (timer)
+            if (timer) {
                 clearTimeout(timer);
+            }
             timer = setTimeout(function() {
                 timer = null;
                 fn.apply(scope || that, args);
@@ -78,10 +79,11 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Number} millis
      * @param {Object} scope
      * @param {Array} args
+     * @return {Number} Идентификатор таймаута.
      */
     F.defer = function(millis, scope, args) {
         var that = this;
-        window.setTimeout(function() {
+        return window.setTimeout(function() {
             that.apply(scope, args || []);
         }, millis);
     };
