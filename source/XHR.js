@@ -107,5 +107,7 @@ var XHR = {
                 }
             }
         })();
+
+        return xhr;
     }
 };
