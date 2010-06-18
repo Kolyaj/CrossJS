@@ -32,6 +32,8 @@ var XHR = {
      *     <li>xml -- передается ответ сервера в виде объекта XML.</li>
      * </ul>
      * @param {Object} options Хэш с параметрами запроса. Все параметры являются необязательными.
+     *
+     * @return {XMLHttpRequest} Объект XMLHttpRequest.
      */
     request: function(options) {
         options = options || {};
