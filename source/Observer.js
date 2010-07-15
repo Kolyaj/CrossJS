@@ -3,6 +3,7 @@
 
 /**
  * @class Observer
+ * @extends Object
  * Класс, предоставляющий интерфейс для генерации событий и для добавления слушателей. Нет никакого жесткого
  * списка событий, которые может генерировать данный класс. Типом события является обычная строка.
     obs.fireEvent('eventname');
@@ -17,7 +18,7 @@
  * наследовать классы от Observer, а достаточно в конструкторе вызвать код
     new Observer().bind(this);
  */
-var Observer = Class.create({
+var Observer = Object.inherit({
     _paramNames: ['scope', 'args', 'single'],
 
     /**
@@ -25,7 +26,7 @@ var Observer = Class.create({
      * @param {Object} listeners Необязательный параметр, содержащий список событий и параметров. Передается
      * методу {@link on}.
      */
-    init: function(listeners) {
+    constructor: function(listeners) {
         this._listeners = {};
         this._paramsRegex = new RegExp('^(' + this._paramNames.join('|') + ')$', 'i');
         this.on(listeners || {});
@@ -153,16 +154,17 @@ var Observer = Class.create({
 
 /**
  * @class Observer.Event
+ * @extends Object
  * Класс события, экземпляры которого передаются обработчикам.
  */
-Observer.Event = Class.create({
+Observer.Event = Object.inherit({
     /**
      * @constructor
      * @param {Object} target Объект, в котором произошло событие
      * @param {String} name Имя события.
      * @param {Object} data Данные, передаваемые вместе с событием.
      */
-    init: function(target, name, data) {
+    constructor: function(target, name, data) {
         apply(this, {
             /**
              * @property target

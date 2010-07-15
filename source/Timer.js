@@ -1,4 +1,3 @@
-//#include_once "Class.js"
 //#include_once "Observer.js"
 
 /**
@@ -22,11 +21,12 @@ var Timer = (function() {
 
 /**
  * @class Timer.Timer
+ * @extends Object
  * Класс, экземпляры которого генерируют события через заданный промежуток времени. Не рекомендуется создавать
  * объекты напрямую, лучше использовать фабрику {@link Timer}, чтобы не плодить запуск функции setInterval.
  * Работа с событиями производится через класс {@link Observer}.
  */
-Timer.Timer = Class.create({
+Timer.Timer = Object.inherit({
     /**
      * @event timer
      * Генерируется через каждые period миллисекунд.
@@ -41,7 +41,7 @@ Timer.Timer = Class.create({
      * @constructor
      * @param {Number} period Количество миллисекунд, через которые генерируются события.
      */
-    init: function(period) {
+    constructor: function(period) {
         this.period = period;
         new Observer().bind(this);
         this.onTimer();

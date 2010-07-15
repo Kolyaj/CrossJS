@@ -1,5 +1,4 @@
 //#include_once "../../source/core.js"
-//#include_once "../../source/Class.js"
 //#include_once "../../source/Element.js"
 //#include_once "../../source/Observer.js"
 //#include_once "../../source/typeof.js"
@@ -10,7 +9,6 @@
 //#include_once "../../source/cookie.js"
 
 //#include_once "core.js"
-//#include_once "Class.js"
 //#include_once "Element.js"
 //#include_once "Observer.js"
 //#include_once "typeof.js"

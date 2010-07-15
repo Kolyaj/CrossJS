@@ -1,5 +1,4 @@
 //#include_once "source/Anim.js"
-//#include_once "source/Class.js"
 //#include_once "source/Component.js"
 //#include_once "source/core.js"
 //#include_once "source/Element.js"

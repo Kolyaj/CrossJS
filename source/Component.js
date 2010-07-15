@@ -1,13 +1,13 @@
-//#include_once "Class.js::base"
 //#include_once "Observer.js::base"
 
 /**
  * @class Component
+ * @extends Object
  * Маленький класс, содержащий в себе возможность передавать в конструктор объект, свойства которого
  * становятся свойствами результирующего объекта. Это позволяет создавать цепочки классов, в которых можно
  * указывать умолчательные значения свойств, и переопределять эти свойства при создании объекта. Это удобно,
  * в частности, при создании виджетов со большим деревом наследования и с большим количеством параметров у каждого.
-    var C1 = Class.extend(Component, {
+    var C1 = Component.inherit({
         a: 1,
         b: 2,
         c: 3,
@@ -17,7 +17,7 @@
         }
     });
 
-    var C2 = Class.extend(C1, {
+    var C2 = C1.inherit({
         a: 2,
         c: 4
     });
@@ -29,7 +29,7 @@
  * Кроме этого, при создании объекта к нему автоматически биндится экземпляр {@link Observer} со всеми вытекающими:
  * возможность генерировать события и навешивать на них обработчики.
  */
-var Component = Class.create({
+var Component = Object.inherit({
     /**
      * @cfg {Object} listeners Объект с навешиваемыми обработчиками событий в формате {@link Observer#on}.
      */
@@ -38,7 +38,7 @@ var Component = Class.create({
      * @constructor
      * @param {Object} config Объект с конфигурационными параметрами. 
      */
-    init: function(config) {
+    constructor: function(config) {
         /**
          * @property {Object} initialConfig Ссылка на объект, переданный при создании компонента.
          */
