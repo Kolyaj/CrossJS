@@ -88,4 +88,24 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
         }, millis);
     };
     //#endlabel defer
+
+    //#label inherit
+    /**
+     * Создаёт конструктор, прототип которого наследует прототип текущего конструктора.
+     * Для создания ничего не наследующего конструктора следует использовать Object.inherit({...}).
+     * @param {Object} proto Объект с методами и свойствами, копирующимися в прототип создаваемого конструктора.
+     * @return {Function} Созданный конструктор.
+     */
+    F.inherit = function(proto) {
+        var that = this;
+        proto = proto || {};
+        var constructor = proto.hasOwnProperty('constructor') ? proto.constructor : function() { that.apply(this, arguments); };
+        var F = function() {};
+        F.prototype = this.prototype;
+        constructor.prototype = apply(new F(), proto);
+        constructor.superclass = this.prototype;
+        constructor.prototype.constructor = constructor;
+        return constructor;
+    };
+    //#endlabel inherit
 })(Function.prototype);
