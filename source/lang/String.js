@@ -260,7 +260,7 @@ String.fromQueryParams = function(object) {
      * @return {Boolean}
      */
     S.endsWith = function(search) {
-        return this.length > search.length && this.indexOf(search) == this.length - search.length;
+        return this.length > search.length && this.lastIndexOf(search) == this.length - search.length;
     };
     //#endlabel endsWith
 

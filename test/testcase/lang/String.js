@@ -85,7 +85,7 @@ var StringTest = TestCase.create({
     },
 
     testEndsWith: function() {
-        this.assertTrue('abcdefg'.endsWith('efg'));
+        this.assertTrue('abefgcdefg'.endsWith('efg'));
         this.assertFalse('abc'.endsWith('1abc'));
         this.assertFalse('abcdefg'.endsWith('123'));
     },
