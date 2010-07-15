@@ -1,3 +1,4 @@
+// todo Добавить createTemplate
 //#label queryCodecOptions
 String.queryCodecOptions = {
     encode: encodeURIComponent,
@@ -262,4 +263,22 @@ String.fromQueryParams = function(object) {
         return this.length > search.length && this.indexOf(search) == this.length - search.length;
     };
     //#endlabel endsWith
+
+    //#label toFragment
+    /**
+     * Создаёт из текущей строки DocumentFragment для последующего добавления его в DOM-дерево.
+     * @param {Document} doc Документ, в контексте которого создаётся фрагмент. По умолчанию текущий документ.
+     * @return {DocumentFragment}
+     */
+    S.toFragment = function(doc) {
+        doc = doc || document;
+        var div = doc.createElement('div');
+        var fragment = doc.createDocumentFragment();
+        div.innerHTML = this.valueOf();
+        while (div.firstChild) {
+            fragment.appendChild(div.firstChild);
+        }
+        return fragment;
+    };
+    //#endlabel toFragment
 })(String.prototype);

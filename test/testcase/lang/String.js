@@ -88,5 +88,14 @@ var StringTest = TestCase.create({
         this.assertTrue('abcdefg'.endsWith('efg'));
         this.assertFalse('abc'.endsWith('1abc'));
         this.assertFalse('abcdefg'.endsWith('123'));
+    },
+
+    testToFragment: function() {
+        var html = '<a href="#">asdf</a><div></div><p></p>';
+        var fragment = html.toFragment();
+        this.assertEquals('A', fragment.childNodes[0].tagName);
+        this.assertEquals('DIV', fragment.childNodes[1].tagName);
+        this.assertEquals('P', fragment.childNodes[2].tagName);
+        this.assertEquals('asdf', fragment.childNodes[0].innerHTML);
     }
 });
