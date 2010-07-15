@@ -8,7 +8,7 @@
      */
     A.indexOf = A.indexOf || function(object) {
         for (var i = 0, l = this.length; i < l; i++) {
-            if (i in this && this[i] == object) {
+            if (i in this && this[i] === object) {
                 return i;
             }
         }
@@ -25,7 +25,7 @@
      */
     A.lastIndexOf = A.lastIndexOf || function(object) {
         for (var i = this.length - 1; i >= 0; i--) {
-            if (i in this && this[i] == object) {
+            if (i in this && this[i] === object) {
                 return i;
             }
         }

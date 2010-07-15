@@ -16,6 +16,7 @@ var ArrayTest = TestCase.create({
     testIndexOf: function() {
         this.assertEqual(3, [1, 2, 3, 4, 5, 6].indexOf(4));
         this.assertEqual(-1, [1, 2, 3, 4, 5].indexOf(6));
+        this.assertEqual(2, [0, 1, '1'].indexOf('1'));
         var a = [1, 2, 3];
         a[10] = undefined;
         this.assertEqual(10, a.indexOf(undefined));
@@ -23,6 +24,7 @@ var ArrayTest = TestCase.create({
 
     testLastIndexOf: function() {
         this.assertEqual(6, [1, 2, 3, 4, 5, 4, 3, 2, 1].lastIndexOf(3));
+        this.assertEqual(1, [0, 1, '1'].indexOf(1));
     },
 
     testMap: function() {
