@@ -234,11 +234,7 @@ String.fromQueryParams = function(object) {
      * @return {String}
      */
     S.times = function(count) {
-        var result = '';
-        for (var i = 0; i < count; i++) {
-            result += this;
-        }
-        return result;
+        return new Array(count + 1).join(this);
     };
     //#endlabel times
 
