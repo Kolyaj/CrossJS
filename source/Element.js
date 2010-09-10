@@ -134,7 +134,7 @@ function $E(el) {
      */
     M.removeClass = function(el, cl) {
         el = $(el);
-        var className = el.className.replace(new RegExp('($|\\s)' + cl + '(?=\\s|$)', 'g'), ' ');
+        var className = el.className.replace(new RegExp('(^|\\s)' + cl + '(?=\\s|$)', 'g'), ' ');
         if (className != el.className) {
             el.className = className;
         }
