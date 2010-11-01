@@ -202,16 +202,13 @@ String.fromQueryParams = function(object) {
      */
     S.format = function(data) {
         var args = arguments;
-        function f(value) {
-            return typeof value == 'undefined' || value == null ? '' : value;
-        }
         return this.replace(/(^|.|\r|\n)(\$\{(.*?)\})/g, function(ignore, before, template, name) {
             if (before == '\\') {
                 return template;
             } else if (/^[0-9]+$/.test(name)) {
-                return before + f(args[+name]);
+                return before + [args[+name]].join();
             } else {
-                return before + f(data && data[name]);
+                return before + [data && data[name]].join();
             }
         });
     };

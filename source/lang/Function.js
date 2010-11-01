@@ -32,15 +32,11 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Object} scope
      */
     F.debounce = function(delay, scope) {
-        var fn = this, timer, args, that;
+        var fn = this, timer;
         return function() {
-            args = arguments;
-            that = this;
-            if (timer) {
-                clearTimeout(timer);
-            }
+            var args = arguments, that = this;
+            clearTimeout(timer);
             timer = setTimeout(function() {
-                timer = null;
                 fn.apply(scope || that, args);
             }, delay);
         };

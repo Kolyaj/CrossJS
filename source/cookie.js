@@ -24,7 +24,7 @@ function createCookie(name, value, days, path) {
  * @return {String} Значение куки или null, если куки с таким именем нет.
  */
 function readCookie(name) {
-    if (document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)(?=;|$)'))) {
+    if (document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'))) {
         return RegExp.$1;
     }
     return null;
