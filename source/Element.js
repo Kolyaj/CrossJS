@@ -1,3 +1,4 @@
+//#include document.js::$
 //#include lang/Object.js::mixin
 //#include lang/Function.js::bind
 
@@ -10,11 +11,11 @@
 //#endlabel setStyle
 
 //#label offset
-//#include core.js::getDocumentScroll::getRootElement
+//#include document.js::getDocumentScroll::getRootElement
 //#endlabel offset
 
 //#label getParent
-//#include core.js::createSelectorFilter
+//#include document.js::createSelectorFilter
 //#endlabel getParent
 
 //#label on

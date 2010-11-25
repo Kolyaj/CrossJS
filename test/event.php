@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Тестирование работы с событиями</title>
-    <script type="text/javascript" src="../source/core.js"></script>
+    <script type="text/javascript" src="../source/document.js"></script>
     <script type="text/javascript" src="../source/Element.js"></script>
     <style type="text/css">
         .getTarget1 {

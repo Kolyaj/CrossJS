@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Тестировние методов из файла Element.js</title>
-    <script type="text/javascript" src="../source/core.js"></script>
+    <script type="text/javascript" src="../source/document.js"></script>
     <script type="text/javascript" src="../source/Element.js"></script>
 </head>
 <body>

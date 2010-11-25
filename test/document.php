@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Тестирование функций геометрии документа.</title>
-    <script type="text/javascript" src="../source/core.js"></script>
+    <script type="text/javascript" src="../source/document.js"></script>
     <style type="text/css">
         body {
             background: #FF0;

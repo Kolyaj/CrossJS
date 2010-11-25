@@ -3,7 +3,7 @@
 //#endlabel getTarget
 
 //#label pointer
-//#include core.js::getDocumentScroll::getRootElement
+//#include document.js::getDocumentScroll::getRootElement
 //#endlabel pointer
 
 var EventObject = {};

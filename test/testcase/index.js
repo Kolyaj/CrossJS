@@ -1,4 +1,5 @@
 //#include ../../source/core.js
+//#include ../../source/document.js
 //#include ../../source/Element.js
 //#include ../../source/Observer.js
 //#include ../../source/lang/Function.js

@@ -1,4 +1,4 @@
-//#include core.js::$$
+//#include document.js::$$
 //#include Component.js::base
 //#include lang/String.js::format
 //#include Element.js::on::un::remove
