@@ -3,7 +3,6 @@
     <title>Тестирование таймера</title>
     <style type="text/css">
     </style>
-    <script type="text/javascript" src="../source/core.js"></script>
     <script type="text/javascript" src="../source/document.js"></script>
     <script type="text/javascript" src="../source/lang/Array.js"></script>
     <script type="text/javascript" src="../source/Element.js"></script>

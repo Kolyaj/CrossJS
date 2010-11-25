@@ -1,4 +1,3 @@
-//#include ../../source/core.js
 //#include ../../source/document.js
 //#include ../../source/Element.js
 //#include ../../source/Observer.js
@@ -6,6 +5,8 @@
 //#include ../../source/lang/Array.js
 //#include ../../source/lang/Date.js
 //#include ../../source/lang/String.js
+//#include ../../source/lang/Math.js
+//#include ../../source/lang/Object.js
 //#include ../../source/cookie.js
 
 //#include core.js
