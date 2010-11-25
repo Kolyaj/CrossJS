@@ -1,4 +1,9 @@
 // todo Добавить createTemplate
+
+//#label toQueryParams
+//#include_once "Array.js::forEach"
+//#endlabel toQueryParams
+
 //#label queryCodecOptions
 String.queryCodecOptions = {
     encode: encodeURIComponent,
@@ -153,9 +158,8 @@ String.fromQueryParams = function(object) {
     };
     //#endlabel camelize
 
-    //#label toQueryString
+    //#label toQueryParams
     //#include_once "self::strip"
-    //#include_once "Array.js::forEach"
     //#include_once "self::queryCodecOptions"
     /**
      * Преобразует строку в формате параметров URL в объект. Повторяющиеся элементы и элементы, имена которых
@@ -170,7 +174,7 @@ String.fromQueryParams = function(object) {
         if (self.length) {
             self.split('&').forEach(function(part) {
                 var pair = part.split('=');
-                var key = decode(pair[0]), value = decode(pair[1]);
+                var key = decode(pair[0]), value = decode(pair[1].replace(/\+/g, '%20'));
                 if (arraySuffix.length && arraySuffix.length < key.length && key.lastIndexOf(arraySuffix) == key.length - arraySuffix.length) {
                     key = key.slice(0, -arraySuffix.length);
                     if (!(key in result)) {
@@ -190,7 +194,7 @@ String.fromQueryParams = function(object) {
         }
         return result;
     };
-    //#endlabel toQueryString
+    //#endlabel toQueryParams
 
     //#label format
     /**
