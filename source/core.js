@@ -26,7 +26,7 @@ function apply(dst) {
 //#endlabel apply
 
 //#label $$
-//#include_once "self::createSelectorFilter"
+//#include ::createSelectorFilter
 /**
  * Выбирает элементы по селектору selector с дополнительными параметрами.
  * @param {String} selector Строка формата, соответствующего формату аргумента функции
@@ -195,7 +195,7 @@ function getRootElement(doc) {
 //#endlabel getRootElement
 
 //#label getDocumentScroll
-//#include_once "core.js::getWindow"
+//#include ::getWindow
 /**
  * Возвращает позицию скрола документа.
  * @param {Document} doc Необязательный. Передается в случае работы с другим документом.
@@ -212,8 +212,7 @@ function getDocumentScroll(doc) {
 //#endlabel getDocumentScroll
 
 //#label getDocumentSize
-//#include_once "self::getViewportSize"
-//#include_once "self::getRootElement"
+//#include ::getViewportSize::getRootElement
 //todo Если у body стоит overflow: auto, то высота не определяется в Firefox
 /**
  * Возвращает размеры всего документа.
@@ -228,7 +227,7 @@ function getDocumentSize(doc) {
 //#endlabel getDocumentSize
 
 //#label getViewportSize
-//#include_once "self::getRootElement"
+//#include ::getRootElement
 /**
  * Возвращает размеры видимой части документа.
  * @param {Document} doc Необязательный. Передается в случае работы с другим документом.

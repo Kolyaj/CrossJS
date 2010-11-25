@@ -21,7 +21,7 @@
     //#endlabel isLeapYear
 
     //#label getDaysInMonth
-    //#include_once "self::isLeapYear"
+    //#include ::isLeapYear
     var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     /**
      * Возвращает количество дней в месяце даты.
@@ -61,7 +61,7 @@
     //#endlabel clearTime
 
     //#label getDayOfYear
-    //#include_once "self::getDaysInMonth::isLeapYear"
+    //#include ::getDaysInMonth::isLeapYear
     /**
      * Возвращает номер дня в году, начиная с 0.
      * @return {Number}
@@ -110,7 +110,7 @@
     //#endlabel getWeekOfYear
 
     //#label format
-    //#include_once "self::isLeapYear::getDaysInMonth::getDayOfYear::getGMTOffset::getWeekOfYear"
+    //#include ::isLeapYear::getDaysInMonth::getDayOfYear::getGMTOffset::getWeekOfYear
     var formatters = {};
 
     var symbols = {

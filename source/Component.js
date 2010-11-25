@@ -1,4 +1,4 @@
-//#include_once "Observer.js::base"
+//#include Observer.js::base
 
 /**
  * @class Component

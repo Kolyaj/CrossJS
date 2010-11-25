@@ -243,7 +243,7 @@
     //#endlabel last
 
     //#label include
-    //#include_once "self::indexOf"
+    //#include ::indexOf
     /**
      * Возвращает true, если все переданные аргументы присутствуют в массиве.
      * @return {Boolean}
@@ -259,7 +259,7 @@
     //#endlabel include
 
     //#label remove
-    //#include_once "self::indexOf"
+    //#include ::indexOf
     /**
      * Удаляет все вхождения object из исходного массива.
      * @param {mixed} object Удаляемый элемент.
@@ -275,7 +275,7 @@
     //#endlabel remove
 
     //#label compact
-    //#include_once "self::filter"
+    //#include ::filter
     /**
      * Возвращает массив, состоящий из ненулевых элементов исходного массива.
      * @return {Array}
@@ -288,7 +288,7 @@
     //#endlabel compact
 
     //#label flatten
-    //#include_once "self::reduce"
+    //#include ::reduce
     /**
      * Разворачивает все вложенные массивы в один одномерный массив.
      * @return {Array}
@@ -305,8 +305,7 @@
     //#endlabel flatten
 
     //#label without
-    //#include_once "self::filter"
-    //#include_once "self::include"
+    //#include ::filter::include
     /**
      * Возвращает массив, не содержащий ни одного из переданных элементов.
      * @return {Array}
@@ -320,8 +319,7 @@
     //#endlabel without
 
     //#label unique
-    //#include_once "self::filter"
-    //#include_once "self::include"
+    //#include ::filter::include
     /**
      * Удаляет повторяющиеся элементы из массива. Из двух одинаковых элементов будет удален элемент
      * с большим индексом.

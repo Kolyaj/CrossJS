@@ -1,7 +1,7 @@
-//#include_once "core.js::$$"
-//#include_once "Component.js::base"
-//#include_once "lang/String.js::format"
-//#include_once "Element.js::on::un::remove"
+//#include core.js::$$
+//#include Component.js::base
+//#include lang/String.js::format
+//#include Element.js::on::un::remove
 
 /**
  * @class Widget

@@ -1,7 +1,14 @@
+//#label getTarget
+//#include Element.js::getParent
+//#endlabel getTarget
+
+//#label pointer
+//#include core.js::getDocumentScroll::getRootElement
+//#endlabel pointer
+
 var EventObject = {};
 (function(E) {
     //#label getTarget
-    //#include_once "Element.js::getParent"
     /**
      * Возвращает источник события. Если указан selector, то производится проход вверх по дереву в поисках
      * элемента удовлетворяющего селектору. Селектор передается в {@link $E#getParent}.
@@ -16,7 +23,6 @@ var EventObject = {};
     //#endlabel getTarget
 
     //#label pointer
-    //#include_once "core.js::getDocumentScroll::getRootElement"
     /**
      * Возвращает позицию события мыши.
      * @return {Array} Массив целых чисел вида [left, top].

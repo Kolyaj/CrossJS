@@ -32,7 +32,7 @@ function readCookie(name) {
 //#endlabel readCookie
 
 //#label eraseCookie
-//#include_once "self::createCookie"
+//#include ::createCookie
 /**
  * Удаляет cookie.
  * @param {String} name Имя удаляемой куки.

@@ -1,8 +1,12 @@
 // todo Добавить createTemplate
 
 //#label toQueryParams
-//#include_once "Array.js::forEach"
+//#include Array.js::forEach
 //#endlabel toQueryParams
+
+//#label extractScripts
+//#include Array.js::map
+//#endlabel extractScripts
 
 //#label queryCodecOptions
 String.queryCodecOptions = {
@@ -13,7 +17,7 @@ String.queryCodecOptions = {
 //#endlabel queryCodecOptions
 
 //#label fromQueryParams
-//#include_once "self::queryCodecOptions"
+//#include ::queryCodecOptions
 /**
  * Статический метод. Преобразует хэш параметров object в строку параметров в формате урла. Если значение параметра
  * является массивом, то к имени параметра добавляется значение настраиваемого свойства
@@ -48,7 +52,7 @@ String.fromQueryParams = function(object) {
     //#endlabel ScriptFragment
 
     //#label stripScripts
-    //#include_once "self::ScriptFragment"
+    //#include ::ScriptFragment
     /**
      * Удаляет скрипты из HTML-кода.
      * @return {String} Строка без вхождений тегов script и их содержимого.
@@ -59,8 +63,7 @@ String.fromQueryParams = function(object) {
     //#endlabel stripScripts
 
     //#label extractScripts
-    //#include_once "Array.js::map"
-    //#include_once "self::ScriptFragment"
+    //#include ::ScriptFragment
     /**
      * Возвращает содержимое тегов script из исходной строки с HTML-кодом.
      * @return {Array} Массив строк, содержащих содержимое тегов script.
@@ -134,7 +137,7 @@ String.fromQueryParams = function(object) {
     //#endlabel escapeHTML
 
     //#label unescapeHTML
-    //#include_once "self::stripTags"
+    //#include ::stripTags
     /**
      * Переводит HTML-сущности в соответствующие теги.
      * @return {String}
@@ -159,8 +162,7 @@ String.fromQueryParams = function(object) {
     //#endlabel camelize
 
     //#label toQueryParams
-    //#include_once "self::strip"
-    //#include_once "self::queryCodecOptions"
+    //#include ::strip::queryCodecOptions
     /**
      * Преобразует строку в формате параметров URL в объект. Повторяющиеся элементы и элементы, имена которых
      * заканчиваются на настраиваемый параметр String.queryCodecOptions.arraySuffix, преобразуются в массив

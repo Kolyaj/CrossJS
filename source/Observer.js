@@ -1,5 +1,5 @@
-//#include_once "lang/Array.js::map::filter::some"
-//#include_once "lang/Function.js::bind"
+//#include lang/Array.js::map::filter::some
+//#include lang/Function.js::bind
 
 /**
  * @class Observer

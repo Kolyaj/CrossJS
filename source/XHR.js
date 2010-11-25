@@ -1,6 +1,6 @@
-//#include_once "lang/XMLHttpRequest.js::base"
-//#include_once "lang/String.js::fromQueryParams"
-//#include_once "core.js::apply"
+//#include lang/XMLHttpRequest.js::base
+//#include lang/String.js::fromQueryParams
+//#include core.js::apply
 
 var XHR = {
     /**

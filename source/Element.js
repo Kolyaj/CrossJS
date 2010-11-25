@@ -1,5 +1,29 @@
-//#include_once "core.js::apply"
-//#include_once "lang/Function.js::bind"
+//#include core.js::apply
+//#include lang/Function.js::bind
+
+//#label getStyle
+//#include lang/String.js::camelize
+//#endlabel getStyle
+
+//#label setStyle
+//#include lang/String.js::camelize
+//#endlabel setStyle
+
+//#label offset
+//#include core.js::getDocumentScroll::getRootElement
+//#endlabel offset
+
+//#label getParent
+//#include core.js::createSelectorFilter
+//#endlabel getParent
+
+//#label on
+//#include EventObject.js::base
+//#endlabel on
+
+//#label un
+//#include lang/Array.js::filter
+//#endlabel un
 
 /**
  * Расширяет DOM-элемент методами из объекта $E.Methods. Все методы также доступны через $E.method(el, ...).
@@ -33,7 +57,6 @@ function $E(el) {
     //#endlabel remove
 
     //#label getStyle
-    //#include_once "lang/String.js::camelize"
     /**
      * Возвращает значение css-свойства элемента.
      * @param {Node/String} el Элемент или его id.
@@ -75,7 +98,6 @@ function $E(el) {
     //#endlabel setStyle
 
     //#label offset
-    //#include_once "core.js::getDocumentScroll::getRootElement"
     /**
      * Возвращает смещение элемента относительно окна браузера.
      * @param {Node/String} el Элемент или его id.
@@ -123,7 +145,7 @@ function $E(el) {
         $(el).className += ' ' + cl;
         return el;
     };
-    //#endlabel endClass
+    //#endlabel addClass
 
     //#label removeClass
     /**
@@ -143,7 +165,6 @@ function $E(el) {
     //#endlabel removeClass
 
     //#label getParent
-    //#include_once "core.js::createSelectorFilter"
     /**
      * Возращает родителя элемента. Если указан selector, то производит поиск вверх по цепочке родителей, пока
      * не будет найден элемент, удовлетворяющий условию.
@@ -176,8 +197,6 @@ function $E(el) {
     //#endlabel getParent
 
     //#label on
-    //#include_once "EventObject.js::base"
-    //#include_once "core.js::apply"
     var paramsRegex = /^(scope|single)$/i, listeners = [];
 
     /**
@@ -232,8 +251,7 @@ function $E(el) {
     //#endlabel on
 
     //#label un
-    //#include_once "self::on"
-    //#include_once "lang/Array.js::filter"
+    //#include ::on
     /**
      * Снимает обработчик handler события name у элемента element. Все четыре параметра должны быть теми же,
      * что и при назначении обработчика методом {@link M#on}. Обработчики событий, назначенные не методом {@link M#on},
@@ -268,8 +286,7 @@ function $E(el) {
     //#endlabel un
 
     //#label initHover
-    //#include_once "self::addClass::removeClass::on"
-    //#include_once "lang/Function.js::bind"
+    //#include ::addClass::removeClass::on
     /**
      * Инициализирует реакцию на наведение и убирание мыши на элементе. После вызова этой функции при наведении
      * указателя мыши на элемент ему добавляется класс className, при убирании указателя с элемента класс,

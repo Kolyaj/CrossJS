@@ -1,4 +1,0 @@
-AddDefaultCharset UTF-8
-
-RewriteEngine On
-RewriteRule ^(.*\.js)$ jsprocessor/index.php?file=$1
