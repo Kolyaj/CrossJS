@@ -1,5 +1,6 @@
 //#include lang/Array.js::map::filter::some
 //#include lang/Function.js::bind
+//#include lang/Object.js::mixin
 
 /**
  * @class Observer
@@ -165,7 +166,7 @@ Observer.Event = Object.inherit({
      * @param {Object} data Данные, передаваемые вместе с событием.
      */
     constructor: function(target, name, data) {
-        apply(this, {
+        Object.mixin(this, {
             /**
              * @property target
              * @type Object

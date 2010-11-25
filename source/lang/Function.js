@@ -1,3 +1,7 @@
+//#label inherit
+//#include Object.js::mixin
+//#endlabel inherit
+
 /**
  * @class Function
  * Методы, расширяющие прототип Function.
@@ -98,7 +102,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
         var constructor = proto.hasOwnProperty('constructor') ? proto.constructor : function() { that.apply(this, arguments); };
         var F = function() {};
         F.prototype = this.prototype;
-        constructor.prototype = apply(new F(), proto);
+        constructor.prototype = Object.mixin(new F(), proto);
         constructor.superclass = this.prototype;
         constructor.prototype.constructor = constructor;
         return constructor;

@@ -7,24 +7,6 @@ function $(element) {
     return typeof element == 'string' ? document.getElementById(element) : element;
 }
 
-//#label apply
-/**
- * Копирует свойства из всех аргументов, начиная со второго, в dst.
- * @param {Object} dst Объект, в который копируются свойства.
- * @return {Object} Объект dst.
- */
-function apply(dst) {
-    for (var i = 1; i < arguments.length; i++) {
-        for (var prop in arguments[i]) {
-            if (arguments[i].hasOwnProperty(prop)) {
-                dst[prop] = arguments[i][prop];
-            }
-        }
-    }
-    return dst;
-}
-//#endlabel apply
-
 //#label $$
 //#include ::createSelectorFilter
 /**

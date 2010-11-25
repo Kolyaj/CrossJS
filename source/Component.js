@@ -43,7 +43,7 @@ var Component = Object.inherit({
          * @property {Object} initialConfig Ссылка на объект, переданный при создании компонента.
          */
         this.initialConfig = config;
-        apply(this, config || {});
+        Object.mixin(this, config || {});
         this.initComponent();
     },
 

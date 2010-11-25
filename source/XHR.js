@@ -1,6 +1,5 @@
 //#include lang/XMLHttpRequest.js::base
 //#include lang/String.js::fromQueryParams
-//#include core.js::apply
 
 var XHR = {
     /**

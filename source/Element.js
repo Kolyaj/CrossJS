@@ -1,4 +1,4 @@
-//#include core.js::apply
+//#include lang/Object.js::mixin
 //#include lang/Function.js::bind
 
 //#label getStyle
@@ -235,7 +235,7 @@ function $E(el) {
         } else {
             element = $(element);
             var callback = function(evt) {
-                handler.call(scope, apply(evt || window.event, EventObject));
+                handler.call(scope, Object.mixin(evt || window.event, EventObject));
                 if (params && params.single) {
                     M.un(element, name, handler, scope, params);
                 }
@@ -302,4 +302,4 @@ function $E(el) {
     };
     //#endlabel initHover
 })($E.Methods = {});
-apply($E, $E.Methods);
+Object.mixin($E, $E.Methods);
