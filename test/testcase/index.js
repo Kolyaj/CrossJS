@@ -1,7 +1,6 @@
 //#include ../../source/core.js
 //#include ../../source/Element.js
 //#include ../../source/Observer.js
-//#include ../../source/typeof.js
 //#include ../../source/lang/Function.js
 //#include ../../source/lang/Array.js
 //#include ../../source/lang/Date.js

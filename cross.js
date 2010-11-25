@@ -3,7 +3,6 @@
 //#include source/Element.js
 //#include source/EventObject.js
 //#include source/Observer.js
-//#include source/typeof.js
 //#include source/Widget.js
 //#include source/XHR.js
 //#include source/lang/Array.js
