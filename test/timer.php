@@ -18,7 +18,7 @@
     <div style="margin-top: 30px;"><button id="to10">Сосчитать до 10</button> <span id="to10label"></span></div>
 </body>
 <script type="text/javascript">
-range(1, 5).forEach(function(i) {
+Array.range(1, 5).forEach(function(i) {
     var j = 0;
     function showIndex() {
         $('timer' + i).innerHTML = j;
@@ -34,7 +34,7 @@ range(1, 5).forEach(function(i) {
 
 $E('to10').on('click', function() {
     $('to10label').style.fontWeight = 'normal';
-    range(1, 10).deferForEach(300, function(i) {
+    Array.range(1, 10).deferForEach(300, function(i) {
         $('to10label').innerHTML = i;
     }, function() {
         $('to10label').style.fontWeight = 'bold';

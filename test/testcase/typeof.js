@@ -2,11 +2,11 @@ var TypeofTest = TestCase.create({
     name: 'typeof',
 
     testIsArray: function() {
-        this.assertTrue(isArray([]));
-        this.assertFalse(isArray(2));
-        this.assertFalse(isArray(''));
-        this.assertFalse(isArray(new Date()));
-        this.assertFalse(isArray(/^$/));
+        this.assertTrue(Array.isArray([]));
+        this.assertFalse(Array.isArray(2));
+        this.assertFalse(Array.isArray(''));
+        this.assertFalse(Array.isArray(new Date()));
+        this.assertFalse(Array.isArray(/^$/));
     },
 
     testIsDate: function() {
