@@ -1,20 +1,4 @@
 
-//#label random
-/**
- * Генерирует случайное число в диапазоне от start до end. Если передан только один аргумент, то он считается
- * верхней границей, а нижняя при этом 0.
- * @param {Number} start Нижняя граница диапазона генерируемых значений.
- * @param {Number} end Верхняя граница диапазона.
- * @return {Number}
- */
-function random(start, end) {
-    if (arguments.length == 1) {
-        end = start;
-        start = 0;
-    }
-    return Math.round(Math.random() * (end - start)) + start;
-}
-//#endlabel random
 
 //#label exec
 /**
