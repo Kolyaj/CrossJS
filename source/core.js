@@ -214,6 +214,7 @@ function getDocumentScroll(doc) {
 //#label getDocumentSize
 //#include_once "self::getViewportSize"
 //#include_once "self::getRootElement"
+//todo Если у body стоит overflow: auto, то высота не определяется в Firefox
 /**
  * Возвращает размеры всего документа.
  * @param {Document} doc Необязательный. Передается в случае работы с другим документом.
