@@ -2,10 +2,12 @@
 /**
  * Возвращает DOM-элемент по его id, или переданный параметр.
  * @param {String/HTMLElement} element Если строка, то возвращается элемент с таким id, иначе переданный аргумент.
+ * @param {Document} [doc] Документ, в котором осуществлять поиск. По умолчанию текущий.
  * @return {HTMLElement}
  */
-function $(element) {
-    return typeof element == 'string' ? document.getElementById(element) : element;
+function $(element, doc) {
+    doc = doc || document;
+    return typeof element == 'string' ? doc.getElementById(element) : element;
 }
 //#endlabel $
 
@@ -143,7 +145,7 @@ function getDocumentScroll(doc) {
 
 //#label getDocumentSize
 //#include ::getViewportSize::getRootElement
-//todo Если у body стоит overflow: auto, то высота не определяется в Firefox
+//todo? Если у body стоит overflow: auto, то высота не определяется в Firefox
 /**
  * Возвращает размеры всего документа.
  * @param {Document} doc Необязательный. Передается в случае работы с другим документом.
@@ -169,6 +171,8 @@ function getViewportSize(doc) {
     return [elem.clientWidth, elem.clientHeight];
 }
 //#endlabel getViewportSize
+
+//todo! Сделать getComputedStyle
 
 //#label fixBackground
 // Фикс бага IE6, из-за которого не кэшируются фоновые изображения.

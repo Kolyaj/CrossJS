@@ -1,10 +1,4 @@
 //#include document.js::$
-//#include lang/Object.js::mixin
-//#include lang/Function.js::bind
-
-//#label getStyle
-//#include lang/String.js::camelize
-//#endlabel getStyle
 
 //#label setStyle
 //#include lang/String.js::camelize
@@ -18,38 +12,23 @@
 //#include document.js::createSelectorFilter
 //#endlabel getParent
 
+//#label classExists
+//#include lang/String.js::trim
+//#endlabel classExists
+
 //#label on
-//#include EventObject.js::base
+//#include lang/Object.js::mixin
+//#include lang/Array.js::filter
 //#endlabel on
 
-//#label un
-//#include lang/Array.js::filter
-//#endlabel un
-
-/**
- * Расширяет DOM-элемент методами из объекта $E.Methods. Все методы также доступны через $E.method(el, ...).
- * Таким образом, есть два способа работы: расширение элемента ($E('elId').remove(), $E(el).getStyle('width')) и
- * непосредственный доступ к методам ($E.remove('elId'), $E.getStyle(el, 'width')).
- * @param {Node/String} el DOM-элемент или id элемента.
- * @return {Node} Элемент с добавленными методами.
- */
-function $E(el) {
-    el = $(el);
-    for (var method in $E.Methods) {
-        if ($E.Methods.hasOwnProperty(method) && typeof $E.Methods[method] == 'function' && !el[method]) {
-            el[method] = $E.Methods[method].bind($E.Methods, el);
-        }
-    }
-    return el;
-}
-
-(function(M) {
+var $E = {};
+(function($E) {
     //#label remove
     /**
      * Удаляет элемент из DOM-дерева.
      * @param {Node/String} el Удаляемый элемент или его id.
      */
-    M.remove = function(el) {
+    $E.remove = function remove(el) {
         el = $(el);
         if (el.parentNode) {
             el.parentNode.removeChild(el);
@@ -57,42 +36,19 @@ function $E(el) {
     };
     //#endlabel remove
 
-    //#label getStyle
-    /**
-     * Возвращает значение css-свойства элемента.
-     * @param {Node/String} el Элемент или его id.
-     * @param {String} style Имя свойства
-     * @return {String} Значение свойства.
-     */
-    M.getStyle =  function(el, style) {
-        el = $(el);
-        var value = el.style[style.camelize()], doc = el.ownerDocument;
-        if (!value) {
-            if (doc.defaultView && doc.defaultView.getComputedStyle) {
-                var css = doc.defaultView.getComputedStyle(el, null);
-                value = css ? css.getPropertyValue(style) : null;
-            } else if (el.currentStyle) {
-                value = el.currentStyle[style.camelize()];
-            }
-        }
-        return value == 'auto' ? null : value;
-    };
-    //#endlabel getStyle
-
     //#label setStyle
-    //#include_once "lang/String.js::camelize"
     /**
      * Устанавливает CSS-свойства элементу. Прозрачно устанавливает opacity и cssFloat в IE.
      * @param {Node/String} el Элемент или его id.
-     * @param {Object} style Хэш-объект со свойствами, вида {width: '100px', height: '100px', ...}.
+     * @param {Object} styles Хэш-объект со свойствами, вида {width: '100px', height: '100px', ...}.
      */
-    M.setStyle = function(el, style) {
+    $E.setStyle = function setStyle(el, styles) {
         el = $(el);
-        for (var name in style) {
+        for (var name in styles) {
             if (name == 'opacity' && el.filters) {
-                el.style.filter = style[name] == 1 ? '' : 'Alpha(opacity=' + (style[name] * 100) + ')';
+                el.style.filter = styles[name] == 1 ? '' : 'Alpha(opacity=' + (styles[name] * 100) + ')';
             } else {
-                el.style[name == 'cssFloat' && el.currentStyle ? 'styleFloat' : name.camelize()] = style[name];
+                el.style[name == 'cssFloat' && el.currentStyle ? 'styleFloat' : name.camelize()] = styles[name];
             }
         }
     };
@@ -104,7 +60,7 @@ function $E(el) {
      * @param {Node/String} el Элемент или его id.
      * @return {Array} Массив целых чисел вида [left, top].
      */
-    M.offset = function(el) {
+    $E.offset = function offset(el) {
         el = $(el);
         var left = 0, top = 0;
         if (el.getBoundingClientRect) {
@@ -130,21 +86,22 @@ function $E(el) {
      * @param {String} cl Имя проверяемого класса.
      * @return {Boolean}
      */
-    M.classExists = function(el, cl) {
-        return new RegExp('(^|\\s)' + cl + '(\\s|$)', '').test($(el).className);
+    $E.classExists = function classExists(el, cl) {
+        return new RegExp('(^|\\s)' + cl.trim() + '(\\s|$)', '').test($(el).className);
     };
     //#endlabel classExists
 
     //#label addClass
+    //#include ::classExists
     /**
      * Добавляет CSS-класс элементу.
      * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя добавляемого класса.
-     * @return {Node} Переданный узел.
      */
-    M.addClass = function(el, cl) {
-        $(el).className += ' ' + cl;
-        return el;
+    $E.addClass = function addClass(el, cl) {
+        if (!$E.classExists(el, cl)) {
+            $(el).className += ' ' + cl;
+        }
     };
     //#endlabel addClass
 
@@ -153,15 +110,13 @@ function $E(el) {
      * Удаляет CSS-класс у элемента.
      * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя удаляемого класса.
-     * @return {Node} Переданный узел.
      */
-    M.removeClass = function(el, cl) {
+    $E.removeClass = function removeClass(el, cl) {
         el = $(el);
         var className = el.className.replace(new RegExp('(^|\\s)' + cl + '(?=\\s|$)', 'g'), ' ');
         if (className != el.className) {
             el.className = className;
         }
-        return el;
     };
     //#endlabel removeClass
 
@@ -175,7 +130,7 @@ function $E(el) {
      * @param {Boolean} includeSelf Если true, то на соответствие селектору проверяется и сам элемент.
      * @return {Node} Найденный родитель или null.
      */
-    M.getParent = function(el, selector, depth, includeSelf) {
+    $E.getParent = function getParent(el, selector, depth, includeSelf) {
         if (!depth || depth <= 0) {
             depth = 1000;
         }
@@ -198,50 +153,48 @@ function $E(el) {
     //#endlabel getParent
 
     //#label on
-    var paramsRegex = /^(scope|single)$/i, listeners = [];
+    //#include ::un
+    var paramsRegex = /^(ctx|single)$/i, listeners = [];
 
     /**
      * Навешивает элементу element обработчик handler на событие name. Обработчик вызывается в контексте
-     * scope или params.scope. Объект события передается аргументом всегда независимо от браузера и расширен
-     * методами из объекта {@link EventObject}. Возможно навешивание сразу нескольких обработчиков для нескольких
-     * событий
+     * ctx или params.ctx. Объект события передается аргументом всегда независимо от браузера и расширен
+     * методами из объекта {@link EventObject}, если тот был подключен. Возможно навешивание сразу нескольких
+     * обработчиков для нескольких событий
     $E.on('my-id', {
         click: this.onclick,
         mousedown: this.onmousedown,
-        scope: this
+        ctx: this
     });
-     * Или, если расширить объект этим методом
-    var el = $E('my-id');
-    el.on({
-        click: this.onclick,
-        mousedown: this.onmousedown,
-        scope: this
-    });
-     * Вместе с именами событий в таком формате можно передавать параметры scope и single.
+     * Вместе с именами событий в таком формате можно передавать параметры ctx и single.
      * @param {Node/String} element Элемент или id элемента, событие которого обрабатывается.
      * @param {String} name Имя события.
      * @param {Function} handler Обработчик события.
-     * @param {Object} scope Контекст вызова обработчика.
+     * @param {Object} ctx Контекст вызова обработчика.
      * @param {Object} params Параметры навешивания события. На данный момент возможен только параметр single,
      * если он равен true, то обрабочик будет вызван только при первом возникновении события, после чего сразу же
      * будет снят.
      */
-    M.on = function(element, name, handler, scope, params) {
+    $E.on = function on(element, name, handler, ctx, params) {
         if (typeof name == 'object') {
             for (var i in name) {
                 if (name.hasOwnProperty(i) && !paramsRegex.test(i) && typeof name[i] == 'function') {
-                    M.on(element, i, name[i], name.scope, name);
+                    $E.on(element, i, name[i], name.ctx, name);
                 }
             }
         } else {
             element = $(element);
             var callback = function(evt) {
-                handler.call(scope, Object.mixin(evt || window.event, EventObject));
+                evt = evt || window.event;
+                if (typeof EventObject != 'undefined') {
+                    Object.mixin(evt, EventObject);
+                }
+                handler.call(ctx, evt);
                 if (params && params.single) {
-                    M.un(element, name, handler, scope, params);
+                    $E.un(element, name, handler, ctx, params);
                 }
             };
-            listeners.push([element, name, handler, scope, callback]);
+            listeners.push([element, name, handler, ctx, callback]);
             if (element.addEventListener) {
                 element.addEventListener(name, callback, false);
             } else if (element.attachEvent) {
@@ -255,24 +208,24 @@ function $E(el) {
     //#include ::on
     /**
      * Снимает обработчик handler события name у элемента element. Все четыре параметра должны быть теми же,
-     * что и при назначении обработчика методом {@link M#on}. Обработчики событий, назначенные не методом {@link M#on},
-     * этим методом не отменяются. Возможно групповое снятие обработчиков в том же формате, что и в {@link M#on}.
+     * что и при назначении обработчика методом {@link #on}. Обработчики событий, назначенные не методом {@link #on},
+     * этим методом не отменяются. Возможно групповое снятие обработчиков в том же формате, что и в {@link #on}.
      * @param {Node/String} element Элемент или id элемента, у которого отменяется событие.
      * @param {String} name Имя события.
      * @param {Function} handler Назначенный обработчик.
-     * @param {Object} scope Контекст вызова обработчика.
+     * @param {Object} ctx Контекст вызова обработчика.
      */
-    M.un = function(element, name, handler, scope) {
+    $E.un = function un(element, name, handler, ctx) {
         if (typeof name == 'object') {
             for (var i in name) {
                 if (name.hasOwnProperty(i) && !paramsRegex.test(i) && typeof name[i] == 'function') {
-                    M.un(element, i, name[i], name.scope);
+                    $E.un(element, i, name[i], name.ctx);
                 }
             }
         } else {
             element = $(element);
             listeners = listeners.filter(function(listener) {
-                if (listener[0] == element && listener[1] == name && listener[2] == handler && listener[3] == scope) {
+                if (listener[0] == element && listener[1] == name && listener[2] == handler && listener[3] == ctx) {
                     if (element.removeEventListener) {
                         element.removeEventListener(name, listener[4], false);
                     } else if (element.detachEvent) {
@@ -285,22 +238,4 @@ function $E(el) {
         }
     };
     //#endlabel un
-
-    //#label initHover
-    //#include ::addClass::removeClass::on
-    /**
-     * Инициализирует реакцию на наведение и убирание мыши на элементе. После вызова этой функции при наведении
-     * указателя мыши на элемент ему добавляется класс className, при убирании указателя с элемента класс,
-     * соответственно, удаляется.
-     * @param {Node/String} el Элемент или id элемента, у которого инициализируется hover.
-     * @param {String} className Добавляемое/удаляемое имя класса. 
-     */
-    M.initHover = function(el, className) {
-        $E.on(el, {
-            mouseover: $E.addClass.bind($E, el, className),
-            mouseout: $E.removeClass.bind($E, el, className)
-        });
-    };
-    //#endlabel initHover
-})($E.Methods = {});
-Object.mixin($E, $E.Methods);
+})($E);

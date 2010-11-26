@@ -75,15 +75,15 @@ String.fromQueryParams = function(object) {
     };
     //#endlabel extractScripts
 
-    //#label strip
+    //#label trim
     /**
      * Удаляет пробельные символы из начала и конца строки.
      * @return {String} Копия строки без начальных и конечных пробельных символов.
      */
-    S.strip = function() {
+    S.trim = function() {
         return this.replace(/^\s+|\s+$/g, '');
     };
-    //#endlabel strip
+    //#endlabel trim
 
     //#label truncate
     /**
