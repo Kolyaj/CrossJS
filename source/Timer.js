@@ -1,4 +1,4 @@
-//#include Observer.js
+//#include Observer.js::base
 
 /**
  * Фабрика объектов таймеров. Для каждого интервала создает лишь один экземпляр таймера. Можно вызывать как с
@@ -71,22 +71,40 @@ Timer.Timer = Object.inherit({
  * @param {Number} delay Задержка в миллисекундах.
  * @param {Function} fn Функция, вызываемая во время каждой итерации. Передаются элемент массива, индекс и сам массив.
  * Если вернет false, то обработка массива прекращается.
- * @param {Function} finish Функция, вызываемая по окончанию перебора. Первым параметром передается сам массив.
- * @param {Object} scope Контекст вызова функций fn и finish.
+ * @param {Object} ctx Контекст вызова функций fn.
+ * @return {Object} Объект с методом complete, которому передаются функция и контекст для её вызова, которая будет
+ * вызвана по окончании перебора элементов.
  */
-Array.prototype.deferForEach = function(delay, fn, finish, scope) {
-    var i = 0;
+Array.prototype.deferForEach = function(delay, fn, ctx) {
+    var i = 0, completed = false, onComplete, onCompleteCtx;
+
+    function complete() {
+        completed = true;
+        if (typeof onComplete == 'function') {
+            onComplete.call(onCompleteCtx);
+        }
+    }
+
     if (this.length) {
         new Timer(delay).on('timer', function(evt) {
-            if (fn.call(scope, this[i], i, this) === false || ++i >= this.length) {
+            if (fn.call(ctx, this[i], i, this) === false || ++i >= this.length) {
                 evt.target.un('timer', arguments.callee, this);
-                if (finish) {
-                    finish.call(scope, this);
-                }
+                complete();
             }
         }, this);
     } else {
-        finish.call(scope, this);
+        complete();
     }
+
+    return {
+        complete: function(fn, ctx) {
+            if (completed) {
+                fn.call(ctx);
+            } else {
+                onComplete = fn;
+                onCompleteCtx = ctx;
+            }
+        }
+    };
 };
 //#endlabel deferForEach
