@@ -1,4 +1,4 @@
-(function(N) {
+(function(Number_prototype) {
     //#label plural
     /**
      * Выбирает из forms нужную форму слова, соответствующую данному числу. Например,
@@ -9,7 +9,7 @@
      * @param {Boolean} hideNumber Если параметр установлен в true, то само число подставляться в результат не будет.
      * @return {String} Число и соответствующая ему форма, разделенные &nbsp;.
      */
-    N.plural = function(forms, hideNumber) {
+    Number_prototype.plural = function(forms, hideNumber) {
         return (hideNumber ? '' : this.valueOf() + '&nbsp;') + forms.split('|')[Number.pluralIndex(this.valueOf())];
     };
     //#endlabel plural

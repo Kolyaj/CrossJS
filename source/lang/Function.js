@@ -6,7 +6,7 @@
  * @class Function
  * Методы, расширяющие прототип Function.
  */
-(function(F) {
+(function(Function_prototype) {
     //#label bind
     /**
      * Создает функцию, вызывающую оригинальную функцию в нужном контексте с нужными параметрами.
@@ -19,7 +19,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Object} scope Объект, в контексте которого будет вызываться функция.
      * @return {Function} Новая функция.
      */
-    F.bind = function(scope) {
+    Function_prototype.bind = function(scope) {
         var that = this, args = [].slice.call(arguments, 1);
         return function() {
             return that.apply(scope || this, args.concat([].slice.call(arguments, 0)));
@@ -35,7 +35,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Number} delay
      * @param {Object} scope
      */
-    F.debounce = function(delay, scope) {
+    Function_prototype.debounce = function(delay, scope) {
         var fn = this, timer;
         return function() {
             var args = arguments, that = this;
@@ -54,7 +54,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param delay
      * @param scope
      */
-    F.throttle = function(delay, scope) {
+    Function_prototype.throttle = function(delay, scope) {
         var fn = this, timer, args, that;
         return function() {
             args = arguments;
@@ -81,7 +81,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Array} args
      * @return {Number} Идентификатор таймаута.
      */
-    F.defer = function(millis, scope, args) {
+    Function_prototype.defer = function(millis, scope, args) {
         var that = this;
         return window.setTimeout(function() {
             that.apply(scope, args || []);
@@ -96,7 +96,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
      * @param {Object} proto Объект с методами и свойствами, копирующимися в прототип создаваемого конструктора.
      * @return {Function} Созданный конструктор.
      */
-    F.inherit = function(proto) {
+    Function_prototype.inherit = function(proto) {
         var that = this;
         proto = proto || {};
         var constructor = proto.hasOwnProperty('constructor') ? proto.constructor : function() { that.apply(this, arguments); };

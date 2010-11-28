@@ -1,11 +1,11 @@
-(function(D) {
+(function(Date_prototype) {
     //#label clone
     /**
      * Клонирует объект даты.
      * @return {Date}
      */
-    D.clone = function() {
-        return new Date(this.getTime());
+    Date_prototype.clone = function() {
+        return new Date_prototype(this.getTime());
     };
     //#endlabel clone
 
@@ -14,7 +14,7 @@
      * Возвращает true, если год даты високосный, иначе false.
      * @return {Boolean}
      */
-    D.isLeapYear = function() {
+    Date_prototype.isLeapYear = function() {
         var year = this.getFullYear();
         return !!((year & 3) == 0 && (year % 100 || (year % 400 == 0 && year)));
     };
@@ -27,7 +27,7 @@
      * Возвращает количество дней в месяце даты.
      * @return {Number}
      */
-    D.getDaysInMonth = function() {
+    Date_prototype.getDaysInMonth = function() {
         var m = this.getMonth();
         return m == 1 && this.isLeapYear() ? 29 : daysInMonth[m];
     };
@@ -40,7 +40,7 @@
      * @param {Date} end Верхняя граница.
      * @return {Boolean}
      */
-    D.between = function(start, end) {
+    Date_prototype.between = function(start, end) {
         var t = this.getTime();
         return start.getTime() <= t && t <= end.getTime();
     };
@@ -51,7 +51,7 @@
      * Обнуляет значения часов, минут, секунд и миллисекунд у даты.
      * @return {Date} this
      */
-    D.clearTime = function() {
+    Date_prototype.clearTime = function() {
         this.setHours(0);
         this.setMinutes(0);
         this.setSeconds(0);
@@ -66,7 +66,7 @@
      * Возвращает номер дня в году, начиная с 0.
      * @return {Number}
      */
-    D.getDayOfYear = function() {
+    Date_prototype.getDayOfYear = function() {
         var num = 0;
         daysInMonth[1] = this.isLeapYear() ? 29 : 28;
         for (var i = 0, m = this.getMonth(); i < m; ++i) {
@@ -85,7 +85,7 @@
      * @param {Boolean} colon Если передано true, то часы и минуты будут разделены двоеточием.
      * @return {String}
      */
-    D.getGMTOffset = function(colon) {
+    Date_prototype.getGMTOffset = function(colon) {
         return (this.getTimezoneOffset() > 0 ? "-" : "+")
             + pad(Math.floor(Math.abs(this.getTimezoneOffset()) / 60))
             + (colon ? ':' : '')
@@ -98,14 +98,14 @@
      * Возвращает номер недели в году. Аналогично спецификатору W метода {@link #format}, но без ведущего нуля.
      * @return {Number} Число от 1 до 53.
      */
-    D.getWeekOfYear = function() {
+    Date_prototype.getWeekOfYear = function() {
         // adapted from http://www.merlyn.demon.co.uk/weekcalc.htm
         var ms1d = 864e5; // milliseconds in a day
         var ms7d = 7 * ms1d; // milliseconds in a week
-        var DC3 = Date.UTC(this.getFullYear(), this.getMonth(), this.getDate() + 3) / ms1d; // an Absolute Day Number
+        var DC3 = Date_prototype.UTC(this.getFullYear(), this.getMonth(), this.getDate() + 3) / ms1d; // an Absolute Day Number
         var AWN = Math.floor(DC3 / 7); // an Absolute Week Number
-        var Wyr = new Date(AWN * ms7d).getUTCFullYear();
-        return AWN - Math.floor(Date.UTC(Wyr, 0, 7) / ms7d) + 1;
+        var Wyr = new Date_prototype(AWN * ms7d).getUTCFullYear();
+        return AWN - Math.floor(Date_prototype.UTC(Wyr, 0, 7) / ms7d) + 1;
     };
     //#endlabel getWeekOfYear
 
@@ -189,7 +189,7 @@
      * сам \ в строке тоже надо экранировать, т.о. фактически нужно ставить два символа \.
      * @return {String} Строка с отформатированным датой/временем.
      */
-    D.format = function(fm) {
+    Date_prototype.format = function(fm) {
         if (!formatters[fm]) {
             var escaping = false;
             formatters[fm] = new Function('d', 'var pad=' + pad.toString() + ';return""' + fm.replace(/./g, function(symbol) {
