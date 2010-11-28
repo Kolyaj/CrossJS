@@ -28,7 +28,7 @@ var $E = {};
      * Удаляет элемент из DOM-дерева.
      * @param {Node/String} el Удаляемый элемент или его id.
      */
-    $E.remove = function remove(el) {
+    $E.remove = function(el) {
         el = $(el);
         if (el.parentNode) {
             el.parentNode.removeChild(el);
@@ -42,7 +42,7 @@ var $E = {};
      * @param {Node/String} el Элемент или его id.
      * @param {Object} styles Хэш-объект со свойствами, вида {width: '100px', height: '100px', ...}.
      */
-    $E.setStyle = function setStyle(el, styles) {
+    $E.setStyle = function(el, styles) {
         el = $(el);
         for (var name in styles) {
             if (name == 'opacity' && el.filters) {
@@ -60,7 +60,7 @@ var $E = {};
      * @param {Node/String} el Элемент или его id.
      * @return {Array} Массив целых чисел вида [left, top].
      */
-    $E.offset = function offset(el) {
+    $E.offset = function(el) {
         el = $(el);
         var left = 0, top = 0;
         if (el.getBoundingClientRect) {
@@ -86,7 +86,7 @@ var $E = {};
      * @param {String} cl Имя проверяемого класса.
      * @return {Boolean}
      */
-    $E.classExists = function classExists(el, cl) {
+    $E.classExists = function(el, cl) {
         return new RegExp('(^|\\s)' + cl.trim() + '(\\s|$)', '').test($(el).className);
     };
     //#endlabel classExists
@@ -98,7 +98,7 @@ var $E = {};
      * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя добавляемого класса.
      */
-    $E.addClass = function addClass(el, cl) {
+    $E.addClass = function(el, cl) {
         if (!$E.classExists(el, cl)) {
             $(el).className += ' ' + cl;
         }
@@ -111,7 +111,7 @@ var $E = {};
      * @param {Node/String} el Элемент или его id.
      * @param {String} cl Имя удаляемого класса.
      */
-    $E.removeClass = function removeClass(el, cl) {
+    $E.removeClass = function(el, cl) {
         el = $(el);
         var className = el.className.replace(new RegExp('(^|\\s)' + cl + '(?=\\s|$)', 'g'), ' ');
         if (className != el.className) {
@@ -130,7 +130,7 @@ var $E = {};
      * @param {Boolean} includeSelf Если true, то на соответствие селектору проверяется и сам элемент.
      * @return {Node} Найденный родитель или null.
      */
-    $E.getParent = function getParent(el, selector, depth, includeSelf) {
+    $E.getParent = function(el, selector, depth, includeSelf) {
         if (!depth || depth <= 0) {
             depth = 1000;
         }
@@ -175,7 +175,7 @@ var $E = {};
      * если он равен true, то обрабочик будет вызван только при первом возникновении события, после чего сразу же
      * будет снят.
      */
-    $E.on = function on(element, name, handler, ctx, params) {
+    $E.on = function(element, name, handler, ctx, params) {
         if (typeof name == 'object') {
             for (var i in name) {
                 if (name.hasOwnProperty(i) && !paramsRegex.test(i) && typeof name[i] == 'function') {
@@ -215,7 +215,7 @@ var $E = {};
      * @param {Function} handler Назначенный обработчик.
      * @param {Object} ctx Контекст вызова обработчика.
      */
-    $E.un = function un(element, name, handler, ctx) {
+    $E.un = function(element, name, handler, ctx) {
         if (typeof name == 'object') {
             for (var i in name) {
                 if (name.hasOwnProperty(i) && !paramsRegex.test(i) && typeof name[i] == 'function') {
