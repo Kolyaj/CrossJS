@@ -1,4 +1,4 @@
-(function(Date_prototype) {
+(function(Date, Date_prototype) {
     //#label clone
     /**
      * Клонирует объект даты.
@@ -208,4 +208,4 @@
         return formatters[fm](this);
     };
     //#endlabel format
-})(Date.prototype);
+})(Date, Date.prototype);

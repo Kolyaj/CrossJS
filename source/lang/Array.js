@@ -1,4 +1,4 @@
-(function(Array_prototype) {
+(function(Array, Array_prototype) {
     //#label indexOf
     if (!Array_prototype.indexOf) {
         /**
@@ -364,9 +364,7 @@
         });
     };
     //#endlabel shuffle
-})(Array.prototype);
 
-(function(Array) {
     //#label isArray
     if (!Array.isArray) {
         /**
@@ -400,4 +398,4 @@
         return a;
     };
     //#endlabel range
-})(Array);
+})(Array, Array.prototype);
