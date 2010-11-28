@@ -3,6 +3,18 @@
 
 var XHR = {
     /**
+     * @type Boolean
+     * Указывает, отправлять ли HTTP-заголовок X-Requested-With.
+     */
+    useDefaultXhrHeader: false,
+
+    /**
+     * @type String
+     * Значение HTTP-заголовка X-Requested-With.
+     */
+    defaultXhrHeader: 'XMLHttpRequest',
+
+    /**
      * Отправляет запрос на сервер средствами XMLHttpRequest. Возможно, чтобы при каждом запросе посылался
      * заголовок X-Requested-With, для этого необходимо установить в true свойство XHR.useDefaultXhrHeader.
      * Значение заголовка хранится в свойстве XHR.defaultXhrHeader и если оно не определено, то подставляется
@@ -22,7 +34,7 @@ var XHR = {
      * @cfg {Function} complete Callback-функция, вызываемая после завершения запроса по любой причине: успешное,
      * с плохим кодом ответа или по таймауту. В последнем случае будет вызвана без аргументов, в всех остальных --
      * аргументом будет объект XMLHttpRequest.
-     * @cfg {Object} scope Объект, в контексте которого вызываются функции success, failure и complete.
+     * @cfg {Object} ctx Объект, в контексте которого вызываются функции success, failure и complete.
      * @cfg {String} responseType Параметр, от которого зависит аргумент вызова функции success. Возможны следующие
      * варианты <ul>
      *     <li>неопределен (по умолчанию) -- передается объект XMLHttpRequest.</li>
@@ -39,7 +51,7 @@ var XHR = {
 
         function callback(name) {
             if (typeof options[name] == 'function') {
-                options[name].apply(options.scope, arguments[1] || [])
+                options[name].apply(options.ctx, arguments[1] || [])
             }
         }
 
@@ -63,7 +75,7 @@ var XHR = {
             hs['Content-Type'] = 'application/x-www-form-urlencoded';
         }
         if (XHR.useDefaultXhrHeader) {
-            hs['X-Requested-With'] = XHR.defaultXhrHeader || 'XMLHttpRequest';
+            hs['X-Requested-With'] = XHR.defaultXhrHeader;
         }
         for (var i in hs) {
             if (hs.hasOwnProperty(i)) {
@@ -97,7 +109,8 @@ var XHR = {
                                     break;
                                 default: break;
                             }
-                            options.success.call(options.scope, param);
+                            callback('success');
+                            options.success.call(options.ctx, param);
                         }
                     } else {
                         callback('failure', [xhr]);
