@@ -359,9 +359,12 @@
      * Перемешивает элементы массива.
      */
     Array_prototype.shuffle = function() {
-        this.sort(function() {
-            return Math.random() > 0.5 ? 1 : -1;
-        });
+        for (var i = this.length - 1; i > 0; i--) {
+            var num = Math.floor(Math.random() * (i + 1));
+            var d = this[num];
+            this[num] = this[i];
+            this[i] = d;
+        }
     };
     //#endlabel shuffle
 
