@@ -41,7 +41,7 @@ var Widget = Component.inherit({
     initComponent: function() {
         Widget.superclass.initComponent.apply(this, arguments);
         this.doc = this.doc || (this.renderTo && this.renderTo.ownerDocument) || document;
-        this.el = $E(this.doc.createElement(this.tagName));
+        this.el = this.doc.createElement(this.tagName);
         if (this.className) {
             this.el.className = this.className;
         }
@@ -55,7 +55,7 @@ var Widget = Component.inherit({
     },
 
     destroy: function() {
-        this.getEl().remove();
+        $E.remove(this.getEl());
         this.fireEvent('destroy');
     },
 
@@ -79,7 +79,7 @@ var Widget = Component.inherit({
                 if (!el) {
                     throw new Error('Elements by ' + selector + ' not found.');
                 }
-                this._elsCache[selector] = $E(el);
+                this._elsCache[selector] = el;
             }
             return this._elsCache[selector];
         }
