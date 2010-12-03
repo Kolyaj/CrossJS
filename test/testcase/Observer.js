@@ -47,7 +47,7 @@ var ObserverTest = TestCase.create({
         var obs = new Observer({
             event1: listener1,
             event2: listener2,
-            scope: this
+            ctx: this
         });
         obs.fireEvent('event1');
         obs.fireEvent('event2');
@@ -62,7 +62,7 @@ var ObserverTest = TestCase.create({
         obs.un({
             event1: listener1,
             event2: listener2,
-            scope: this
+            ctx: this
         });
         obs.fireEvent('event1');
         obs.fireEvent('event2');
@@ -76,7 +76,7 @@ var ObserverTest = TestCase.create({
                 this.assertEquals(obs, evt.target);
                 this.assertEquals(5, evt.five);
             },
-            scope: this
+            ctx: this
         });
         obs.fireEvent('event', {five: 5});
     },
@@ -88,7 +88,7 @@ var ObserverTest = TestCase.create({
                 this.assertEquals('event', evt.name);
                 this.assertEquals(5, evt.five);
             },
-            scope: this,
+            ctx: this,
             args: ['five']
         });
         obs.fireEvent('event', {five: 5});

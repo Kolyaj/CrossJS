@@ -33,7 +33,7 @@ function $(element, doc) {
  *          Если параметр reduceInit не указан, то для первого найденного элемента reduce не вызывается.</li>
  *      <li>reduceInit -- инициализирующее значение для reduce. Если не задано, то подставляется первый найденный
  *          элемент или результат работы map, если она задана.</li>
- *      <li>scope -- контекст, внутри которого вызываются функции filter, map и reduce.</li>
+ *      <li>ctx -- контекст, внутри которого вызываются функции filter, map и reduce.</li>
  *  </ul>
  * Если в селекторе указан модификатор !, то функции map и reduce вызваны не будут, а будет возвращен найденный
  * элемент.
@@ -51,7 +51,7 @@ function $$(selector, options) {
         if (!selectorFilter(element)) {
             return false;
         }
-        return typeof options.filter == 'function' ? options.filter.call(options.scope, element, index) : true;
+        return typeof options.filter == 'function' ? options.filter.call(options.ctx, element, index) : true;
     };
     var elements = $(options.parent || document).getElementsByTagName(selector.split('.')[0] || '*');
     var result = [], reduceValue = options.reduceInit, reduceInitialized = ('reduceInit' in options);
@@ -61,9 +61,9 @@ function $$(selector, options) {
             if (single) {
                 return el;
             }
-            var value = typeof options.map == 'function' ? options.map.call(options.scope, el, j) : el;
+            var value = typeof options.map == 'function' ? options.map.call(options.ctx, el, j) : el;
             if (typeof options.reduce == 'function') {
-                reduceValue = reduceInitialized ? options.reduce.call(options.scope, reduceValue, value, j) : value;
+                reduceValue = reduceInitialized ? options.reduce.call(options.ctx, reduceValue, value, j) : value;
                 reduceInitialized = true;
             } else {
                 result.push(value);

@@ -20,7 +20,7 @@
     new Observer().bind(this);
  */
 var Observer = Object.inherit({
-    _paramNames: ['scope', 'args', 'single'],
+    _paramNames: ['ctx', 'args', 'single'],
 
     /**
      * @constructor
@@ -39,17 +39,17 @@ var Observer = Object.inherit({
      obs.on({
         event1: function1,
         event2: function2,
-        scope: obj
+        ctx: obj
      });
      * При такой подписке, на событие event1 будет вызвана функция funciton1 в контексте obj, на событие event2
      * будет вызвана функция function2 в контексте obj.
      * @param {String/Object} name Имя события.
      * @param {Function} fn Фукнция, вызываемая при возникновении события. Последним параметров сюда всегда
      * передается объект события, остальные параметры зависят от свойства args четвертого аргумента.
-     * @param {Object} scope Контекст вызова функции fn.
+     * @param {Object} ctx Контекст вызова функции fn.
      * @param {Object} params Параметры:
      *  <ul>
-     *      <li>scope - контекст вызова обработчика.</li>
+     *      <li>ctx - контекст вызова обработчика.</li>
      *      <li>single - если установлен, то данный обработчик вызывается лишь единожды.</li>
      *      <li>args - массив имен параметров, которые необходимо извлечь из объекта события и передать
      *          обработчику. Например, если args установлен в ['name', 'target'], то первым параметром в
@@ -57,7 +57,7 @@ var Observer = Object.inherit({
      *          события.</li>
      *  </ul>
      */
-    on: function(name, fn, scope, params) {
+    on: function(name, fn, ctx, params) {
         params = params || {};
         if (typeof name == 'object') {
             for (var i in name) {
@@ -66,7 +66,7 @@ var Observer = Object.inherit({
                 }
             }
         } else {
-            params.scope = scope || params.scope;
+            params.ctx = ctx || params.ctx;
             this._listeners[name] = this._listeners[name] || [];
             this._listeners[name].unshift([fn, params]);
         }
@@ -77,10 +77,10 @@ var Observer = Object.inherit({
      * первым параметром объекта, аналогично вызову {@link on}.
      * @param {String/Object} name Имя события.
      * @param {Function} fn Подписанный обработчик.
-     * @param {Object} scope Контекст вызова.
+     * @param {Object} ctx Контекст вызова.
      * @param {Object} params Параметры, аналогичные параметрам, передаваемым в {@link on}.
      */
-    un: function(name, fn, scope, params) {
+    un: function(name, fn, ctx, params) {
         params = params || {};
         if (typeof name == 'object') {
             for (var i in name) {
@@ -90,7 +90,7 @@ var Observer = Object.inherit({
             }
         } else {
             if (this._listeners[name]) {
-                params.scope = scope || params.scope;
+                params.ctx = ctx || params.ctx;
                 this._listeners[name] = this._listeners[name].filter(function(listener) {
                     return listener[0] != fn || !this._paramsEquals(listener[1], params);
                 }, this);
@@ -114,7 +114,7 @@ var Observer = Object.inherit({
                         return evt[arg];
                     }, this);
                     args.push(evt);
-                    fn.apply(options.scope || evt.target, args);
+                    fn.apply(options.ctx || evt.target, args);
                     if (options.single) {
                         this.un(name, fn, null, options);
                     }
@@ -149,7 +149,7 @@ var Observer = Object.inherit({
     },
 
     _paramsEquals: function(p1, p2) {
-        return (!p1.scope && !p2.scope) || p1.scope == p2.scope;
+        return (!p1.ctx && !p2.ctx) || p1.ctx == p2.ctx;
     }
 });
 

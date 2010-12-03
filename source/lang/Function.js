@@ -16,32 +16,32 @@ function foo(a, b, c, d, e, f) {
 var a = [1, 2, 3, 4, 5, 6];
 var bar = foo.bind(a, 0, 1, 2);
 bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
-     * @param {Object} scope Объект, в контексте которого будет вызываться функция.
+     * @param {Object} ctx Объект, в контексте которого будет вызываться функция.
      * @return {Function} Новая функция.
      */
-    Function_prototype.bind = function(scope) {
+    Function_prototype.bind = function(ctx) {
         var that = this, args = [].slice.call(arguments, 1);
         return function() {
-            return that.apply(scope || this, args.concat([].slice.call(arguments, 0)));
+            return that.apply(ctx || this, args.concat([].slice.call(arguments, 0)));
         };
     };
     //#endlabel bind
 
     //#label debounce
     /**
-     * Вызывает функцию с задержкой delay в контексте scope. Если во время задержки функция была вызвана еще
+     * Вызывает функцию с задержкой delay в контексте ctx. Если во время задержки функция была вызвана еще
      * раз, то предыдующий вызов отменяется, а таймер обновляется. Таким образом из нескольких вызовов,
      * совершающихся чаще, чем delay, реально будет вызван только последний.
      * @param {Number} delay
-     * @param {Object} scope
+     * @param {Object} ctx
      */
-    Function_prototype.debounce = function(delay, scope) {
+    Function_prototype.debounce = function(delay, ctx) {
         var fn = this, timer;
         return function() {
             var args = arguments, that = this;
             clearTimeout(timer);
             timer = setTimeout(function() {
-                fn.apply(scope || that, args);
+                fn.apply(ctx || that, args);
             }, delay);
         };
     };
@@ -49,12 +49,12 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
 
     //#label throttle
     /**
-     * Вызывает оригинальную функцию не чаще delay в контексте scope. В отличие от {@link #debounce} первый вызов
+     * Вызывает оригинальную функцию не чаще delay в контексте ctx. В отличие от {@link #debounce} первый вызов
      * происходит сразу.
      * @param delay
-     * @param scope
+     * @param ctx
      */
-    Function_prototype.throttle = function(delay, scope) {
+    Function_prototype.throttle = function(delay, ctx) {
         var fn = this, timer, args, that;
         return function() {
             args = arguments;
@@ -63,7 +63,7 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
                 (function() {
                     timer = null;
                     if (args) {
-                        fn.apply(scope || that, args);
+                        fn.apply(ctx || that, args);
                         args = null;
                         timer = setTimeout(arguments.callee, delay);
                     } 
@@ -75,16 +75,16 @@ bar(3, 4, 5);    // Выведет [1, 2, 3, 4, 5, 6]
 
     //#label defer
     /**
-     * Вызывает функцию указанное количество миллисекунд в контексте scope с аргументами args.
+     * Вызывает функцию указанное количество миллисекунд в контексте ctx с аргументами args.
      * @param {Number} millis
-     * @param {Object} scope
+     * @param {Object} ctx
      * @param {Array} args
      * @return {Number} Идентификатор таймаута.
      */
-    Function_prototype.defer = function(millis, scope, args) {
+    Function_prototype.defer = function(millis, ctx, args) {
         var that = this;
         return window.setTimeout(function() {
-            that.apply(scope, args || []);
+            that.apply(ctx, args || []);
         }, millis);
     };
     //#endlabel defer
