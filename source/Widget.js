@@ -1,7 +1,8 @@
 //#include document.js::$$
 //#include Component.js::base
-//#include lang/String.js::format
+//#include lang/String.js::compile::uncamelize
 //#include Element.js::on::un::remove
+//#include lang/Object.js::keys
 
 /**
  * @class Widget
@@ -11,32 +12,44 @@
  */
 var Widget = Component.inherit({
     /**
-     * @cfg {String} tagName
+     * @type String
      * Корневой тег виджета. По умолчанию div.
      */
     tagName: 'div',
 
     /**
-     * @cfg {String} className
+     * @type String
      * Имя CSS-класса корневого элемента.
      */
+    className: '',
 
     /**
-     * @cfg {String} tpl
-     * Шаблон содержимого виджета в формате функции {@link S#format}. В качестве данных шаблон получает сам объект
+     * @type String
+     * Шаблон содержимого виджета в формате функции {@link S#compile}. В качестве данных шаблон получает сам объект
      * виджета, таким образом можно "зашивать" в виджет конфигурационные свойства. 
      */
+    tpl: '',
 
     /**
-     * @cfg {Element/String} renderTo
+     * @type Element|String
      * DOM-элемент или его id. Если указан, то корневой элемент после создания добавляется в этот элемент.
      */
+    renderTo: null,
 
     /**
-     * @cfg {Document} doc
+     * @type Document
      * Документ, в котором создается виджет. Если параметр не указан и указан {@link #renderTo}, то берется
      * свойство renderTo.ownerDocument, иначе текущий документ.
      */
+    doc: null,
+
+    //#label css
+    /**
+     * @type Object
+     * Объект с селекторами CSS. Преобразуется в строку и вставляется в head документа в виде обычной таблицы стилей.
+     */
+    css: null,
+    //#endlabel css
 
     initComponent: function() {
         Widget.superclass.initComponent.apply(this, arguments);
@@ -46,11 +59,37 @@ var Widget = Component.inherit({
             this.el.className = this.className;
         }
         if (this.tpl) {
-            this.el.innerHTML = this.tpl.format(this);
+            this.el.innerHTML = this.tpl.compile().call(this);
         }
         if (this.renderTo) {
             $(this.renderTo).appendChild(this.el);
         }
+
+        //#label css
+        if (this.css) {
+            var cssText = '';
+            var proto = this.constructor.prototype;
+            while (proto != Widget.prototype) {
+                if (proto.hasOwnProperty('css')) {
+                    cssText = this.compileCss(proto.css) + cssText;
+                    delete proto.css;
+                }
+                proto = proto.constructor.superclass;
+            }
+
+            var styleEl = this.doc.createElement('style');
+            styleEl.type = 'text/css';
+            if (styleEl.styleSheet) {
+                styleEl.styleSheet.cssText = cssText;
+            } else if (styleEl.innerText == '') {
+                styleEl.innerText = cssText;
+            } else {
+                styleEl.innerHTML = cssText;
+            }
+            this.doc.getElementsByTagName('head')[0].appendChild(styleEl);
+        }
+        //#endlabel css
+
         this._elsCache = {};
     },
 
@@ -58,6 +97,21 @@ var Widget = Component.inherit({
         $E.remove(this.getEl());
         this.fireEvent('destroy');
     },
+
+    //#label css
+    /**
+     * Составляет строку с CSS-селекторами из объекта с CSS-селекторами.
+     * @param {Object} selectors
+     * @return {String}
+     */
+    compileCss: function(selectors) {
+        return Object.keys(selectors).map(function(rule) {
+            return '${0} {\n${1}}'.format(rule, Object.keys(this.css[rule]).map(function(property) {
+                return '    ${0}: ${1};\n'.format(property.uncamelize(), this.css[rule][property]);
+            }, this).join('')) + '\n';
+        }, this).join('');
+    },
+    //#endlabel css
 
     /**
      * Возвращает корневой элемент виджета или, если указан selector, первого из его детей, удовлетворяющего
