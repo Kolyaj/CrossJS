@@ -1,8 +1,10 @@
-// todo Добавить createTemplate
-
 //#label toQueryParams
 //#include Array.js::forEach
 //#endlabel toQueryParams
+
+//#label compile
+//#include JSON.js::stringify
+//#endlabel compile
 
 (function(String, String_prototype) {
     //#label queryCodecOptions
@@ -198,6 +200,19 @@
     };
     //#endlabel camelize
 
+    //#label uncamelize
+    /**
+     * Выполняет преобразование, обратное {@link #camelize}, т.е. строку вида camelCaseStyle преобразует в
+     * camel-case-style.
+     * @return {String}
+     */
+    String_prototype.uncamelize = function() {
+        return this.replace(/[A-Z]/g, function(letter) {
+            return '-' + letter.toLowerCase();
+        });
+    };
+    //#endlabel uncamelize
+
     //#label toQueryParams
     //#include ::trim::queryCodecOptions
     /**
@@ -317,4 +332,41 @@
         return fragment;
     };
     //#endlabel toFragment
+
+    //#label compile
+    //#include ::format
+    /**
+     * Компилирует строку, содержащую шаблон, в функцию, этот шаблон применяющую к своему контексту.
+     * Шаблон понимает два вида тегов:
+     *      * <%= Выражение, которое необходимо вывести. %>
+     *      * <% Произвольный JS-код %>
+     * Всё, что находится вне этих тегов, выводится как есть.
+     * Переменные в шаблон передаются в контексте вызова результирующей функции.
+     *
+     * @return {Function}
+     *
+     * @example
+     *  var tpl = 'Меня зовут <%= this.name %><br>';
+     *  tpl += 'У меня есть питомцы: <% for (var i = 0; i < this.pets.length; i++) { %><%= this.pets[i] %>, <% } %>';
+     *  var compiledTpl = tpl.compile();
+     *  alert(compiledTpl.call({name: 'Коля', pets: ['кошка', 'собака', 'попугай']}));
+     */
+    String_prototype.compile = function() {
+        var resultVarName = '$_' + Math.round(Math.random() * 1e5);
+        var body = 'var ${0}=[];'.format(resultVarName);
+        body += this.replace(/(<%(=)?(.*?)%>)|([\s\S]+?(?=(<%|$)))/g, function(wholeMatch, tag, assign, tagValue) {
+            if (tag) {
+                if (assign) {
+                    return '${0}.push(${1});'.format(resultVarName, tagValue);
+                } else {
+                    return '${0}\n'.format(tagValue);
+                }
+            } else {
+                return '${0}.push(${1});'.format(resultVarName, JSON.stringify(wholeMatch));
+            }
+        });
+        body += 'return ${0}.join("");'.format(resultVarName);
+        return new Function(body);
+    };
+    //#endlabel compile
 })(String, String.prototype);
