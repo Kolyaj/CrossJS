@@ -1,5 +1,5 @@
 //#include lang/Array.js::map::filter::some
-//#include lang/Function.js::bind
+//#include lang/Function.js::bind::inherit
 //#include lang/Object.js::mixin
 
 /**
