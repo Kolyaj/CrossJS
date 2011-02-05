@@ -21,6 +21,10 @@
 //#include lang/Array.js::filter
 //#endlabel on
 
+//#label initDrag
+//#include EventObject.js::stop
+//#endlabel initDrag
+
 var $E = {};
 (function($E) {
     //#label remove
@@ -238,4 +242,47 @@ var $E = {};
         }
     };
     //#endlabel un
+
+    //#label initDrag
+    //#include ::on::un
+    /**
+     * Инициализирует возможность перетаскивания элемента. Метод предназначен лишь для автоматизации навешивания
+     * обработчиков событий. Вся логика перетаскивания, ресайза или ещё чего реализуется в вызывающем коде.
+     *
+     * Вторым аргументом передаётся объект с тремя функциями: start, move, end, а также с контекстом вызова ctx.
+     * Функция start вызывается в момент начала перетаскивания (т.е. при событии mousedown). В ней можно
+     * произвести необходимую инициализацию. Если start вернёт false, то перетаскивание инициализировано не будет.
+     * Функция move вызывается при передвижении курсора мыши с зажатой левой кнопкой.
+     * Функция end вызывается при отпускании левой кнопки мыши.
+     * Всем трём функциям первым и единственным аргументом передаётся объект события.
+     *
+     * @param {Element} element DOM-элемент или его id, mousedown на котором будет инициализировать перетаскивание.
+     * @param {Object} listeners Объект с обработчиками start, move, end и контекстом их вызова ctx.
+     */
+    $E.initDrag = function(element, listeners) {
+        var doc = $(element).ownerDocument;
+
+        function onMouseMove(evt) {
+            if (listeners.move) {
+                listeners.move.call(listeners.ctx, evt);
+            }
+        }
+
+        function onMouseUp(evt) {
+            if (listeners.end) {
+                listeners.end.call(listeners.ctx, evt);
+            }
+            $E.un(doc, 'mousemove', onMouseMove);
+            $E.un(doc, 'mouseup', onMouseUp);
+        }
+
+        $E.on(element, 'mousedown', function(evt) {
+            if (!listeners.start || listeners.start.call(listeners.ctx, evt) !== false) {
+                $E.on(doc, 'mousemove', onMouseMove);
+                $E.on(doc, 'mouseup', onMouseUp);
+                evt.stop();
+            }
+        });
+    };
+    //#endlabel initDrag
 })($E);
