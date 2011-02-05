@@ -1,4 +1,5 @@
 var JSON = JSON || new function() {
+    //#label parse
     this.parse = function(json) {
         try {
             return new Function('return ' + json)();
@@ -6,7 +7,9 @@ var JSON = JSON || new function() {
             throw new SyntaxError('JSON.parse');
         }
     };
+    //#endlabel parse
 
+    //#label stringify
     var escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g;
     var meta = {
         '\b': '\\b',
@@ -93,4 +96,5 @@ var JSON = JSON || new function() {
     }
 
     this.stringify = stringify;
+    //#endlabel stringify
 };
