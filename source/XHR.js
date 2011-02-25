@@ -109,8 +109,7 @@ var XHR = {
                                     break;
                                 default: break;
                             }
-                            callback('success');
-                            options.success.call(options.ctx, param);
+                            callback('success', [param]);
                         }
                     } else {
                         callback('failure', [xhr]);
