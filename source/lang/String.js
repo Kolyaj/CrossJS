@@ -227,22 +227,26 @@
         var decode = String.queryCodecOptions.decode, arraySuffix = String.queryCodecOptions.arraySuffix;
         if (self.length) {
             self.split('&').forEach(function(part) {
-                var pair = part.split('=');
-                var key = decode(pair[0]), value = decode(pair[1].replace(/\+/g, '%20'));
-                if (arraySuffix.length && arraySuffix.length < key.length && key.lastIndexOf(arraySuffix) == key.length - arraySuffix.length) {
-                    key = key.slice(0, -arraySuffix.length);
-                    if (!(key in result)) {
-                        result[key] = [];
+                if (part) {
+                    var pair = part.split('=');
+                    if (pair[0]) {
+                        var key = decode(pair[0]), value = decode((pair[1] || '').replace(/\+/g, '%20'));
+                        if (arraySuffix.length && arraySuffix.length < key.length && key.lastIndexOf(arraySuffix) == key.length - arraySuffix.length) {
+                            key = key.slice(0, -arraySuffix.length);
+                            if (!(key in result)) {
+                                result[key] = [];
+                            }
+                        }
+                        if (key in result) {
+                            if (Object.prototype.toString.call(result[key]) == '[object Array]') {
+                                result[key].push(value);
+                            } else {
+                                result[key] = [result[key], value];
+                            }
+                        } else {
+                            result[key] = value;
+                        }
                     }
-                }
-                if (key in result) {
-                    if (Object.prototype.toString.call(result[key]) == '[object Array]') {
-                        result[key].push(value);
-                    } else {
-                        result[key] = [result[key], value];
-                    }
-                } else {
-                    result[key] = value;
                 }
             });
         }
