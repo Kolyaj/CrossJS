@@ -21,8 +21,11 @@
      * Статический метод. Преобразует хэш параметров object в строку параметров в формате урла. Если значение параметра
      * является массивом, то к имени параметра добавляется значение настраиваемого свойства
      * String.queryCodecOptions.arraySuffix (по умолчанию '[]') и параметр повторяется столько раз, сколько элементов
-     * в массиве. Функцию кодирования можно установить в параметре String.queryCodecOptions.encode.
+     * в массиве. Функцию кодирования, вместо encodeURIComponent, можно установить в параметре
+     * String.queryCodecOptions.encode.
+     *
      * @param {Object} object Хэш с параметрами.
+     *
      * @return {String} строка в форме параметров URL.
      */
     String.fromQueryParams = function(object) {
@@ -46,6 +49,7 @@
     //#label stripScripts
     /**
      * Удаляет скрипты из HTML-кода.
+     *
      * @return {String} Строка без вхождений тегов script и их содержимого.
      */
     String_prototype.stripScripts = function() {
@@ -56,6 +60,7 @@
     //#label extractScripts
     /**
      * Возвращает содержимое тегов script из исходной строки с HTML-кодом.
+     *
      * @return {Array} Массив строк, содержащих содержимое тегов script.
      */
     String_prototype.extractScripts = function() {
@@ -71,6 +76,7 @@
     if (!String_prototype.trim) {
         /**
          * Удаляет пробельные символы из начала и конца строки.
+         *
          * @return {String} Копия строки без начальных и конечных пробельных символов.
          */
         String_prototype.trim = function() {
@@ -83,6 +89,7 @@
     if (!String_prototype.trimLeft) {
         /**
          * Удаляет пробельные символы из начала строки.
+         *
          * @return {String} Копия строки без начальный пробельных символов.
          */
         String_prototype.trimLeft = function() {
@@ -95,6 +102,7 @@
     if (!String_prototype.trimRight) {
         /**
          * Удаляет пробельные символы из конца строки.
+         *
          * @return {String} Копия строки без конечных пробельных символов.
          */
         String_prototype.trimRight = function() {
@@ -106,8 +114,10 @@
     //#label truncate
     /**
      * Обрезает строку до длины length в центре. Вместо вырезанного куска вставляет строку truncation.
+     *
      * @param {Number} length Длина результирующей строки.
      * @param {String} [truncation] Строка, добавляемая вместо вырезанной части (по умолчанию '...').
+     *
      * @return {String} Обрезанная строка.
      */
     String_prototype.truncate = function(length, truncation) {
@@ -123,8 +133,10 @@
     //#label truncateLeft
     /**
      * Обрезает строку до длины length слева. Вместо вырезанного куска вставляет строку truncation.
+     *
      * @param {Number} length Длина результирующей строки.
      * @param {String} [truncation] Строка, добавляемая вместо вырезанной части (по умолчанию '...').
+     *
      * @return {String} Обрезанная строка.
      */
     String_prototype.truncateLeft = function(length, truncation) {
@@ -139,8 +151,10 @@
     //#label truncateRight
     /**
      * Обрезает строку до длины length справа. Вместо вырезанного куска вставляет строку truncation.
+     *
      * @param {Number} length Длина результирующей строки.
      * @param {String} [truncation] Строка, добавляемая вместо вырезанной части (по умолчанию '...').
+     *
      * @return {String} Обрезанная строка.
      */
     String_prototype.truncateRight = function(length, truncation) {
@@ -155,6 +169,7 @@
     //#label stripTags
     /**
      * Удаляет HTML-теги из строки.
+     *
      * @return {String}
      */
     String_prototype.stripTags = function() {
@@ -165,6 +180,7 @@
     //#label escapeHTML
     /**
      * Экранирует HTML-теги в HTML-сущности.
+     *
      * @return {String}
      */
     String_prototype.escapeHTML = function() {
@@ -179,6 +195,7 @@
     //#include ::stripTags
     /**
      * Переводит HTML-сущности в соответствующие теги.
+     *
      * @return {String}
      */
     String_prototype.unescapeHTML = function() {
@@ -191,6 +208,7 @@
     //#label camelize
     /**
      * Переводит строки из dash-style в camelStyle.
+     *
      * @return {String}
      */
     String_prototype.camelize = function() {
@@ -204,6 +222,7 @@
     /**
      * Выполняет преобразование, обратное {@link #camelize}, т.е. строку вида camelCaseStyle преобразует в
      * camel-case-style.
+     *
      * @return {String}
      */
     String_prototype.uncamelize = function() {
@@ -218,8 +237,9 @@
     /**
      * Преобразует строку в формате параметров URL в объект. Повторяющиеся элементы и элементы, имена которых
      * заканчиваются на настраиваемый параметр String.queryCodecOptions.arraySuffix, преобразуются в массив
-     * с удалением arraySuffix из имени. Функцию декодирования можно установить в параметре
-     * String.queryCodecOptions.decode.
+     * с удалением arraySuffix из имени. Функцию декодирования, вместо decodeURIComponent, можно установить в
+     * параметре String.queryCodecOptions.decode.
+     *
      * @return {Object}
      */
     String_prototype.toQueryParams = function() {
@@ -259,7 +279,8 @@
      * Форматирует строку, заменяя в ней <ul>
      *     <li>шаблоны вида ${number}, где number -- положительное число, на number по счету параметр.</li>
      *     <li>шаблоны вида ${string} на значение свойства string первого переданного аргумента.</li>
-     * </ul> Если решетка экранирована символом \, то замена не производится.
+     * </ul> Если $ экранирован символом \, то замена не производится.
+     *
      * @return {String}
      */
     String_prototype.format = function(data) {
@@ -268,17 +289,19 @@
             if (before == '\\') {
                 return template;
             } else if (/^[0-9]+$/.test(name)) {
-                return before + [args[+name]].join();
+                return before + [args[+name]].join('');
             } else {
-                return before + [data && data[name]].join();
+                return before + [data && data[name]].join('');
             }
         });
     };
 
     /**
-     * Статический метод. Вызывает метод format в контексте строки str с аргументами args.
+     * Статический метод. Вызывает метод {@link #format} в контексте строки str с аргументами args.
+     *
      * @param {String} str Форматируемая строка.
-     * @param {Array} args Аргументы, передаваемые в {@link S.format}.
+     * @param {Array} args Аргументы, передаваемые в {@link #format}.
+     *
      * @return {String}
      */
     String.format = function(str, args) {
@@ -289,7 +312,9 @@
     //#label times
     /**
      * Повторяет строку count раз.
+     *
      * @param {Number} count
+     *
      * @return {String}
      */
     String_prototype.times = function(count) {
@@ -300,7 +325,9 @@
     //#label startsWith
     /**
      * Проверяет, начинается ли строка с search.
+     *
      * @param {String} search
+     *
      * @return {Boolean}
      */
     String_prototype.startsWith = function(search) {
@@ -311,7 +338,9 @@
     //#label endsWith
     /**
      * Проверяет, заканчивается ли строка на search.
+     *
      * @param {String} search
+     *
      * @return {Boolean}
      */
     String_prototype.endsWith = function(search) {
@@ -322,7 +351,9 @@
     //#label toFragment
     /**
      * Создаёт из текущей строки DocumentFragment для последующего добавления его в DOM-дерево.
+     *
      * @param {Document} doc Документ, в контексте которого создаётся фрагмент. По умолчанию текущий документ.
+     *
      * @return {DocumentFragment}
      */
     String_prototype.toFragment = function(doc) {
@@ -348,12 +379,6 @@
      * Переменные в шаблон передаются в контексте вызова результирующей функции.
      *
      * @return {Function}
-     *
-     * @example
-     *  var tpl = 'Меня зовут <%= this.name %><br>';
-     *  tpl += 'У меня есть питомцы: <% for (var i = 0; i < this.pets.length; i++) { %><%= this.pets[i] %>, <% } %>';
-     *  var compiledTpl = tpl.compile();
-     *  alert(compiledTpl.call({name: 'Коля', pets: ['кошка', 'собака', 'попугай']}));
      */
     String_prototype.compile = function() {
         var resultVarName = '$_' + Math.round(Math.random() * 1e5);

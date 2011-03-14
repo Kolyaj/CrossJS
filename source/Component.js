@@ -2,48 +2,25 @@
 
 /**
  * @class Component
- * @extends Object
- * Маленький класс, содержащий в себе возможность передавать в конструктор объект, свойства которого
- * становятся свойствами результирующего объекта. Это позволяет создавать цепочки классов, в которых можно
- * указывать умолчательные значения свойств, и переопределять эти свойства при создании объекта. Это удобно,
- * в частности, при создании виджетов со большим деревом наследования и с большим количеством параметров у каждого.
-    var C1 = Component.inherit({
-        a: 1,
-        b: 2,
-        c: 3,
-
-        method: function() {
-
-        }
-    });
-
-    var C2 = C1.inherit({
-        a: 2,
-        c: 4
-    });
-
-    var c = new C2({
-        a: 3
-    });
-    alert([c.a, c.b, c.c]);  // 3, 2, 4
- * Кроме этого, при создании объекта к нему автоматически биндится экземпляр {@link Observer} со всеми вытекающими:
- * возможность генерировать события и навешивать на них обработчики.
+ * @extends Observer
+ *
+ * Абстрактный класс-заготовка для создания классов, принимающих в конструкторе хэш параметров. Позволяет создавать
+ * классы, свойства и методы которых легко переопределить как в наследуемых классах, так и при создании экземпляра
+ * класса.
  */
-var Component = Object.inherit({
-    /**
-     * @cfg {Object} listeners Объект с навешиваемыми обработчиками событий в формате {@link Observer#on}.
-     */
-
+var Component = Observer.inherit({
     /**
      * @constructor
-     * @param {Object} config Объект с конфигурационными параметрами. 
+     * @param {Object} [config] Объект с конфигурационными параметрами.
      */
     constructor: function(config) {
+        Component.superclass.constructor.apply(this, arguments);
         /**
-         * @property {Object} initialConfig Ссылка на объект, переданный при создании компонента.
+         * @type {Object}
+         * Ссылка на объект, переданный при создании компонента.
          */
-        this.initialConfig = config;
-        Object.mixin(this, config || {});
+        this.initialConfig = config || {};
+        Object.mixin(this, this.initialConfig);
         this.initComponent();
     },
 
@@ -53,6 +30,5 @@ var Component = Object.inherit({
      * параметры, конфигурационный объект, переданный в конструктор, будет уже скопирован в this.
      */
     initComponent: function() {
-        new Observer(this.listeners).bind(this);
     }
 });

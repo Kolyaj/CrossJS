@@ -4,7 +4,9 @@
         /**
          * Возвращает номер, под которым находится object в массиве, или -1, если object не нашелся.
          * Поиск ведется с начала массива.
-         * @param {mixen} object Искомый объект.
+         *
+         * @param {*} object Искомый объект.
+         *
          * @return {Number} Индекс элемента или -1, если не найден.
          */
         Array_prototype.indexOf = function(object) {
@@ -23,7 +25,9 @@
         /**
          * Возвращает номер, под которым находится object в массиве, или -1, если object не нашелся.
          * Поиск ведется с конца массива.
-         * @param {mixed} object Искомый объект.
+         *
+         * @param {*} object Искомый объект.
+         *
          * @return {Number} Индекс элемента или -1, если не найден.
          */
         Array_prototype.lastIndexOf = function(object) {
@@ -40,14 +44,11 @@
     //#label forEach
     if (!Array_prototype.forEach) {
         /**
-         * Перебирает элементы массива и для каждого вызывает fn в контексте ctx. В fn передаются следующие
-         * параметры <ul>
-         *      <li>элемент массива;</li>
-         *      <li>текущий индекс;</li>
-         *      <li>ссылка на сам массив.</li>
-         * </ul>
+         * Перебирает элементы массива и для каждого вызывает fn в контексте ctx. В fn передаются
+         * параметры: элемент массива, текущий индекс, ссылка на сам массив.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {Object} ctx Контекст вызова.
+         * @param {Object} [ctx] Контекст вызова callback-функции.
          */
         Array_prototype.forEach = function(fn, ctx) {
             for (var i = 0, l = this.length; i < l; i++) {
@@ -63,9 +64,11 @@
     if (!Array_prototype.map) {
         /**
          * Возвращает массив, содержащий элементы исходного массива после обработки функцией fn, вызванной в
-         * контексте ctx. Вызов fn аналогичен {@link #forEach}.
+         * контексте ctx. Вызов fn аналогичен forEach.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {Object} ctx Контекст вызова.
+         * @param {Object} [ctx] Контекст вызова callback-функции.
+         *
          * @return {Array} Результирующий массив.
          */
         Array_prototype.map = function(fn, ctx) {
@@ -84,9 +87,11 @@
     if (!Array_prototype.filter) {
         /**
          * Возвращает массив, содержащий только те элементы исходного массива, для которых fn вернула
-         * истинное значение. Вызов fn аналогичен {@link #forEach}.
+         * истинное значение. Вызов fn аналогичен forEach.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {Object} ctx Контекст вызова.
+         * @param {Object} [ctx] Контекст вызова callback-функции.
+         *
          * @return {Array} Результирующий массив.
          */
         Array_prototype.filter = function(fn, ctx) {
@@ -105,9 +110,11 @@
     if (!Array_prototype.every) {
         /**
          * Возвращает true, если fn для каждого элемента массива вернула истинное значение. Вызов fn
-         * аналогичен {@link #forEach}.
+         * аналогичен forEach.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {Object} ctx Контекст вызова.
+         * @param {Object} [ctx] Контекст вызова callback-функции.
+         *
          * @return {Boolean}
          */
         Array_prototype.every = function(fn, ctx) {
@@ -125,10 +132,11 @@
     if (!Array_prototype.some) {
         /**
          * Возвращает true, если fn хотя бы для одного элемента массива вернула истинное значение.
-         * После первого найденного истинного значения перебор прекращается. Вызов fn аналогичен
-         * {@link #forEach}.
+         * После первого найденного истинного значения перебор прекращается. Вызов fn аналогичен forEach.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {Object} ctx Контекст вызова.
+         * @param {Object} [ctx] Контекст вызова callback-функции.
+         *
          * @return {Boolean}
          */
         Array_prototype.some = function(fn, ctx) {
@@ -152,9 +160,11 @@
          * массива. Если init не передан, то перебор, соответственно, начинается со второго элемента.
          * Возвращается результат выполнения функции fn на последней итерации. Если вызывается у пустого
          * массива и не передан init, то бросается исключение TypeError.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {mixed} init Инициирующее значение.
-         * @return {mixed} Результат последнего вызова fn.
+         * @param {*} [init] Инициирующее значение.
+         *
+         * @return {*} Результат последнего вызова fn.
          */
         Array_prototype.reduce = function(fn, init) {
             var i = 0, l = this.length;
@@ -183,10 +193,12 @@
     //#label reduceRight
     if (!Array_prototype.reduceRight) {
         /**
-         * То же самое, что {@link #reduce}, но перебор ведется с конца массива.
+         * То же самое, что reduce, но перебор ведется с конца массива.
+         *
          * @param {Function} fn Callback-функция.
-         * @param {mixed} init Инициирующее значение.
-         * @return {mixed} Результат последнего вызова fn.
+         * @param {*} [init] Инициирующее значение.
+         *
+         * @return {*} Результат последнего вызова fn.
          */
         Array_prototype.reduceRight = function(fn, init) {
             var i = this.length - 1;
@@ -215,6 +227,7 @@
     //#label clone
     /**
      * Клонирование массива.
+     *
      * @return {Array} Копия исходного массива.
      */
     Array_prototype.clone = function() {
@@ -225,11 +238,13 @@
     //#label first
     /**
      * Возвращает первый элемент массива, который не обязательно элемент с индексом 0.
-     * Если передан параметр fn, но возвращается первый элемент массива, для которого fn
-     * вернул истинное значение. Вызов fn аналогичен {@forEach}.
-     * @param {Function} fn Callback-функция.
-     * @param {Object} ctx Контекст вызова.
-     * @return {mixed}
+     * Если передан параметр fn, то возвращается первый элемент массива, для которого fn
+     * вернул истинное значение. Вызов fn аналогичен forEach.
+     *
+     * @param {Function} [fn] Callback-функция.
+     * @param {Object} [ctx] Контекст вызова для callback-функции.
+     *
+     * @return {*}
      */
     Array_prototype.first = function(fn, ctx) {
         for (var i = 0, l = this.length; i < l; i++) {
@@ -245,10 +260,11 @@
     /**
      * Возвращает последний элемент массива.Если передан параметр fn, но возвращается первый
      * элемент при переборе с конца массива, для которого fn вернул истинное значение. Вызов
-     * fn аналогичен {@forEach}.
-     * @param {Function} fn Callback-функция.
-     * @param {Object} ctx Контекст вызова.
-     * @return {mixed}
+     * fn аналогичен forEach.
+     * @param {Function} [fn] Callback-функция.
+     * @param {Object} [ctx] Контекст вызова.
+     *
+     * @return {*}
      */
     Array_prototype.last = function(fn, ctx) {
         for (var i = this.length - 1; i >= 0; i--) {
@@ -264,6 +280,7 @@
     //#include ::indexOf
     /**
      * Возвращает true, если все переданные аргументы присутствуют в массиве.
+     *
      * @return {Boolean}
      */
     Array_prototype.include = function() {
@@ -280,7 +297,9 @@
     //#include ::indexOf
     /**
      * Удаляет все вхождения object из исходного массива.
-     * @param {mixed} object Удаляемый элемент.
+     *
+     * @param {*} object Удаляемый элемент.
+     *
      * @return {Array} this
      */
     Array_prototype.remove = function(object) {
@@ -296,6 +315,7 @@
     //#include ::filter
     /**
      * Возвращает массив, состоящий из ненулевых элементов исходного массива.
+     *
      * @return {Array}
      */
     Array_prototype.compact = function() {
@@ -309,6 +329,7 @@
     //#include ::reduce
     /**
      * Разворачивает все вложенные массивы в один одномерный массив.
+     *
      * @return {Array}
      */
     Array_prototype.flatten = function() {
@@ -326,6 +347,7 @@
     //#include ::filter::include
     /**
      * Возвращает массив, не содержащий ни одного из переданных элементов.
+     *
      * @return {Array}
      */
     Array_prototype.without = function() {
@@ -341,6 +363,7 @@
     /**
      * Удаляет повторяющиеся элементы из массива. Из двух одинаковых элементов будет удален элемент
      * с большим индексом.
+     *
      * @return {Array} Результирующий массив.
      */
     Array_prototype.unique = function() {
@@ -368,11 +391,60 @@
     };
     //#endlabel shuffle
 
+    //#label deferForEach
+    /**
+     * Асинхронно перебирает элементы массива с задержкой после каждого элемента.
+     *
+     * @param {Number} delay Задержка в миллисекундах.
+     * @param {Function} fn Функция, вызываемая во время каждой итерации. Передаются элемент массива, индекс
+     *      и сам массив. Если вернет false, то обработка массива прекращается.
+     * @param {Object} [ctx] Контекст вызова функций fn.
+     *
+     * @return {Object} Объект с методом complete, которому передаются функция и контекст для её вызова,
+     *      которая будет вызвана по окончании перебора элементов.
+     */
+    Array_prototype.deferForEach = function(delay, fn, ctx) {
+        var i = 0, completed = false, onComplete, onCompleteCtx, arr = this;
+
+        function complete() {
+            completed = true;
+            if (typeof onComplete == 'function') {
+                onComplete.call(onCompleteCtx);
+            }
+        }
+
+        if (this.length) {
+            (function() {
+                if (fn.call(ctx, arr[i], i, arr) !== false && ++i < arr.length) {
+                    setTimeout(arguments.callee, delay);
+                } else {
+                    complete();
+                }
+            })();
+        } else {
+            complete();
+        }
+
+        return {
+            complete: function(fn, ctx) {
+                if (completed) {
+                    fn.call(ctx);
+                } else {
+                    onComplete = fn;
+                    onCompleteCtx = ctx;
+                }
+            }
+        };
+    };
+    //#endlabel deferForEach
+
     //#label isArray
     if (!Array.isArray) {
         /**
          * Возвращает true, если переданный аргумент является массивом, иначе false.
-         * @param {Mixed} obj
+         *
+         * @param {*} obj
+         *
          * @return {Boolean}
          */
         Array.isArray = function(obj) {
@@ -385,8 +457,10 @@
     /**
      * Возвращает массив, содержащий count последовательных чисел, начиная со start. Если передан только один
      * аргумент, то он считается количеством элементов, а отсчет производится с нуля.
+     *
      * @param {Number} start Стартовое число.
-     * @param {Number} count Количество элементов.
+     * @param {Number} [count] Количество элементов.
+     *
      * @return {Array} Массив последовательных чисел.
      */
     Array.range = function(start, count) {

@@ -1,6 +1,7 @@
 //#label createCookie
 /**
  * Создаёт cookie.
+ *
  * @param {String} name Имя куки.
  * @param {String} value Значение куки.
  * @param {Number} [days] Количество дней, на которое ставится кука.
@@ -20,7 +21,9 @@ function createCookie(name, value, days, path) {
 //#label readCookie
 /**
  * Возвращает значение cookie, если она установлена.
+ *
  * @param {String} name Имя куки.
+ *
  * @return {String} Значение куки или null, если куки с таким именем нет.
  */
 function readCookie(name) {
@@ -35,6 +38,7 @@ function readCookie(name) {
 //#include ::createCookie
 /**
  * Удаляет cookie.
+ *
  * @param {String} name Имя удаляемой куки.
  */
 function eraseCookie(name) {

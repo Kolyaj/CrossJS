@@ -1,141 +1,188 @@
-//#include document.js::$$
 //#include Component.js::base
+//#include dom.js::$::$$::onEvent::unEvent
 //#include lang/String.js::compile::uncamelize
-//#include Element.js::on::un::remove
 //#include lang/Object.js::keys
+//#include lang/Array.js::map
+//#include css.js::base
 
 /**
  * @class Widget
- * @extend Component
- * Компонент-заготовка для создания виджетов. Обеспечивает создание DOM-элемента, присвоение ему CSS-класса,
- * заполнение его HTML-кодом и добавление его в DOM-дерево, если требуется.
+ * @extends Component
+ *
+ * Класс для создания виджетов, содержащий внутри и JavaScript, и HTML, и CSS.
  */
 var Widget = Component.inherit({
     /**
      * @type String
-     * Корневой тег виджета. По умолчанию div.
+     * Имя тега корневого элемента.
      */
     tagName: 'div',
 
     /**
      * @type String
-     * Имя CSS-класса корневого элемента.
+     * CSS-класс корневого элемента.
      */
     className: '',
 
     /**
      * @type String
-     * Шаблон содержимого виджета в формате функции {@link S#compile}. В качестве данных шаблон получает сам объект
-     * виджета, таким образом можно "зашивать" в виджет конфигурационные свойства. 
+     * HTML шаблон виджета.
      */
-    tpl: '',
+    html: '',
 
     /**
-     * @type Element|String
-     * DOM-элемент или его id. Если указан, то корневой элемент после создания добавляется в этот элемент.
+     * @type Node/String
+     * Элемент, куда отрендерить виджет.
      */
     renderTo: null,
 
     /**
      * @type Document
-     * Документ, в котором создается виджет. Если параметр не указан и указан {@link #renderTo}, то берется
-     * свойство renderTo.ownerDocument, иначе текущий документ.
+     * Родительский документ для виджета.
      */
     doc: null,
 
-    //#label css
     /**
      * @type Object
-     * Объект с селекторами CSS. Преобразуется в строку и вставляется в head документа в виде обычной таблицы стилей.
+     * Стили для виджета.
      */
-    css: null,
-    //#endlabel css
+    css: {},
 
     initComponent: function() {
         Widget.superclass.initComponent.apply(this, arguments);
-        this.doc = this.doc || (this.renderTo && this.renderTo.ownerDocument) || document;
+        if (this.renderTo) {
+            this.renderTo = $(this.renderTo);
+        }
+        if (!this.doc) {
+            this.doc = this.renderTo ? this.renderTo.ownerDocument : document;
+        }
         this.el = this.doc.createElement(this.tagName);
         if (this.className) {
-            this.el.className = this.className;
+            this.el.className = this.grabPrototypeChain('className').join(' ');
         }
-        if (this.tpl) {
-            this.el.innerHTML = this.tpl.compile().call(this);
+        if (this.html) {
+            this.el.innerHTML = this.applyTemplate(this.html);
         }
         if (this.renderTo) {
-            $(this.renderTo).appendChild(this.el);
+            this.renderTo.appendChild(this.el);
         }
-
-        //#label css
-        if (this.css) {
-            var cssText = '';
-            var proto = this.constructor.prototype;
-            while (proto != Widget.prototype) {
-                if (proto.hasOwnProperty('css')) {
-                    cssText = this.compileCss(proto.css) + cssText;
-                    delete proto.css;
-                }
-                proto = proto.constructor.superclass;
-            }
-
-            var styleEl = this.doc.createElement('style');
-            styleEl.type = 'text/css';
-            if (styleEl.styleSheet) {
-                styleEl.styleSheet.cssText = cssText;
-            } else if (styleEl.innerText == '') {
-                styleEl.innerText = cssText;
-            } else {
-                styleEl.innerHTML = cssText;
-            }
-            this.doc.getElementsByTagName('head')[0].appendChild(styleEl);
-        }
-        //#endlabel css
-
-        this._elsCache = {};
+        this.elementsCache = {};
+        this.buildCss();
     },
 
+    /**
+     * Уничтожает виджет и посылает событие destroy.
+     */
     destroy: function() {
-        $E.remove(this.getEl());
+        removeElement(this.getEl());
         this.fireEvent('destroy');
     },
 
-    //#label css
     /**
-     * Составляет строку с CSS-селекторами из объекта с CSS-селекторами.
-     * @param {Object} selectors
-     * @return {String}
+     * Бежит по цепочке прототипов и собирает в них значения нужного свойства.
+     *
+     * @param {String} prop Имя свойства.
+     * @param {Boolean} [removeProps] Удалять ли свойства после взятия значения.
+     *
+     * @return {Array} Массив значений переданного свойства из цепочки прототипов.
      */
-    compileCss: function(selectors) {
-        return Object.keys(selectors).map(function(rule) {
-            return '${0} {\n${1}}'.format(rule, Object.keys(this.css[rule]).map(function(property) {
-                return '    ${0}: ${1};\n'.format(property.uncamelize(), this.css[rule][property]);
-            }, this).join('')) + '\n';
-        }, this).join('');
+    grabPrototypeChain: function(prop, removeProps) {
+        var proto = this.constructor.prototype, result = [];
+        while (proto != Widget.prototype) {
+            if (proto.hasOwnProperty(prop)) {
+                result.push(proto[prop]);
+                if (removeProps) {
+                    delete proto[prop];
+                }
+            }
+            proto = proto.constructor.superclass;
+        }
+        return result;
     },
-    //#endlabel css
 
     /**
-     * Возвращает корневой элемент виджета или, если указан selector, первого из его детей, удовлетворяющего
-     * этому селектор. Селектор передается в функцию {@link $$} и должен удовлетворять ее синтаксису.
-     * Результаты выборок кэшируются, но если указан force, то выборка будет произведена заново.
-     * @param {String} selector Необязательный. Если указан, возвращается первый элемент из виджета, удовлетворяющий
-     * селектору.
-     * @param {Boolean} force Необязательный. Если true, выборка по селектору будет производится, не смотря на
-     * наличие этого селектора в кэше.
-     * @return {Element}
+     * Компилирует и добавляет в документ CSS текущего виджета.
+     */
+    buildCss: function() {
+        var cssText = this.grabPrototypeChain('css', true).reverse().map(function(css) {
+            return this.compileCSS(css);
+        }, this).join('');
+        var styleEl = this.doc.createElement('style');
+        styleEl.type = 'text/css';
+        if (styleEl.styleSheet) {
+            styleEl.styleSheet.cssText = cssText;
+        } else if (styleEl.innerText == '') {
+            styleEl.innerText = cssText;
+        } else {
+            styleEl.innerHTML = cssText;
+        }
+        this.doc.getElementsByTagName('head')[0].appendChild(styleEl);
+    },
+
+    /**
+     * Компилирует в строку переданные CSS селекторы.
+     *
+     * @param {Object} selectors
+     *
+     * @return {String}
+     */
+    compileCSS: function(selectors) {
+        return Object.keys(selectors).map(function(selector) {
+            return this.compileCSSRule(selector, selectors[selector]);
+        }, this).join('');
+    },
+
+    /**
+     * Компилирует в строку CSS правило.
+     *
+     * @param {String} rule
+     * @param {Object} properties
+     *
+     * @return {String}
+     */
+    compileCSSRule: function(rule, properties) {
+        var cascades = [];
+        return '${0} {\n${1}}\n'.format(rule, Object.keys(properties).map(function(property) {
+            var value = properties[property];
+            if (typeof value == 'object') {
+                cascades.push(this.compileCSSRule(rule + ' ' + property, value));
+                return '';
+            } else {
+                var propname = normalizeCSSProperty(property, value);
+                return '    ${0}: ${1};\n'.format(propname[0].uncamelize(), propname[1]);
+            }
+        }, this).join('')) + cascades.join('');
+    },
+
+    /**
+     * Вызывает шаблон в контексте виджета.
+     *
+     * @param {Function} tpl Скомпилированный шаблон.
+     *
+     * @return {String}
+     */
+    applyTemplate: function(tpl) {
+        return tpl ? tpl.compile().call(this) : '';
+    },
+
+    /**
+     * Возвращает первый DOM-элемент из виджета, соответствующий селектору. Если селектор не указан, возвращается
+     * корневой элемент.
+     *
+     * @param {String} selector
+     * @param {Boolean} force Если true, то элемент ищется заново, а не берётся из кэша.
+     *
+     * @return {Node}
      */
     getEl: function(selector, force) {
         if (selector) {
             if (selector.charAt(0) != '!') {
                 selector = '!' + selector;
             }
-            if (!this._elsCache[selector] || force) {
-                var el = $$(selector, {parent: this.el});
-                if (!el) {
-                    throw new Error('Elements by ' + selector + ' not found.');
-                }
-                this._elsCache[selector] = el;
+            if (!this.elementsCache[selector] || force) {
+                this.elementsCache[selector] = $$(selector, this.el);
             }
-            return this._elsCache[selector];
+            return this.elementsCache[selector];
         }
         return this.el;
     }
