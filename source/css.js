@@ -1,4 +1,5 @@
 //#include lang/Array.js::forEach
+//#include lang/String.js::camelize
 
 /**
  * Возвращает имя и значение CSS свойства, актуальное для текущего браузера. Свойство opacity, например, для IE
@@ -15,15 +16,16 @@
  */
 function normalizeCSSProperty(name, value, el) {
     var etalon = el ? el.style : document.documentElement.style;
+    name = name.camelize();
 
     //#label opacity
-    if (name == 'opacity' && typeof etalon['filter'] == 'string') {
+    if (name == 'opacity' && typeof etalon['opacity'] != 'string') {
         return ['filter', value == 1 ? '' : 'Alpha(opacity=' + (value * 100) + ')'];
     }
     //#endlabel opacity
 
     //#label float
-    if (/^float|(style|css)Float$/.test(name)) {
+    if (/^(float|(style|css)Float)$/.test(name)) {
         name = 'float';
         if (el) {
             name = typeof etalon['cssFloat'] == 'string' ? 'cssFloat' : 'styleFloat';
@@ -34,7 +36,7 @@ function normalizeCSSProperty(name, value, el) {
 
     //#label boxShadow
     if (name == 'boxShadow') {
-        ['boxShadow', 'MozBoxShadow', 'WebkitBoxShadow'].forEach(function(property) {
+        ['MozBoxShadow', 'WebkitBoxShadow', 'boxShadow'].forEach(function(property) {
             if (typeof etalon[property] == 'string') {
                 name = property;
             }

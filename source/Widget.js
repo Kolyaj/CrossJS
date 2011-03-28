@@ -148,7 +148,7 @@ var Widget = Component.inherit({
                 cascades.push(this.compileCSSRule(rule + ' ' + property, value));
                 return '';
             } else {
-                var propname = normalizeCSSProperty(property, value);
+                var propname = normalizeCSSProperty(property, String(value).format(this));
                 return '    ${0}: ${1};\n'.format(propname[0].uncamelize(), propname[1]);
             }
         }, this).join('')) + cascades.join('');
@@ -166,23 +166,20 @@ var Widget = Component.inherit({
     },
 
     /**
-     * Возвращает первый DOM-элемент из виджета, соответствующий селектору. Если селектор не указан, возвращается
+     * Возвращает первый DOM-элемент из виджета с соответствующим CSS-классом. Если класс не указан, возвращается
      * корневой элемент.
      *
-     * @param {String} selector
-     * @param {Boolean} force Если true, то элемент ищется заново, а не берётся из кэша.
+     * @param {String} className
+     * @param {Boolean} [force] Если true, то элемент ищется заново, а не берётся из кэша.
      *
      * @return {Node}
      */
-    getEl: function(selector, force) {
-        if (selector) {
-            if (selector.charAt(0) != '!') {
-                selector = '!' + selector;
+    getEl: function(className, force) {
+        if (className) {
+            if (!this.elementsCache[className] || force) {
+                this.elementsCache[className] = $$('!.' + className, this.el);
             }
-            if (!this.elementsCache[selector] || force) {
-                this.elementsCache[selector] = $$(selector, this.el);
-            }
-            return this.elementsCache[selector];
+            return this.elementsCache[className];
         }
         return this.el;
     }

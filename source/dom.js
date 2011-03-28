@@ -16,7 +16,7 @@ function $(el, doc) {
 
 //#label $$
 //#include lang/Array.js::isArray
-//#include ::createSelectorFilter
+//#include ::createSelectorFilter::$
 /**
  * Ищет элементы по простому селектору внутри нужных родителей.
  *
@@ -41,7 +41,7 @@ function $$(selector, parents) {
     var filter = createSelectorFilter(selector);
     var result = [];
     for (var i = 0; i < parents.length; i++) {
-        var elements = parents[i].getElementsByTagName(selector.split('.')[0] || '*');
+        var elements = $(parents[i]).getElementsByTagName(selector.split('.')[0] || '*');
         for (var j = 0; j < elements.length; j++) {
             if (filter(elements[j])) {
                 if (once) {
@@ -106,9 +106,10 @@ function removeElement(el) {
 //#label setElementStyle
 //#include ::$
 //#include css.js::base
+//#include lang/String.js::camelize
 /**
  * Устанавливает элементу el стили style. Стили передаются в виде объекта. Имена стилей, состоящие из нескольких
- * строк, пишутся в camelCase (fontSize, borderBottom, ...).
+ * строк, пишутся в кавычках ('font-size': '12px', 'border-bottom': '1px solid red', ...).
  *
  * @param {Node/String} el Элемент, которому устанавливаются стили, или его id.
  * @param {Object} style Хэш со стилями, например, {fontSize: '12px', width: '30px'}
@@ -117,7 +118,7 @@ function setElementStyle(el, style) {
     el = $(el);
     for (var name in style) {
         var propValue = normalizeCSSProperty(name, style[name]);
-        el.style[propValue[0]] = propValue[1];
+        el.style[propValue[0].camelize()] = propValue[1];
     }
 }
 //#endlabel setElementStyle
@@ -258,8 +259,8 @@ function processEventArguments(args) {
     }
     if (args[1].indexOf(',') > -1) {
         var events = args[1].split(',');
-        for (var j = 0; j < events.lenght; j++) {
-            args.callee(el, events[j], args[2], args[3]);
+        for (var j = 0; j < events.length; j++) {
+            args.callee(args[0], events[j], args[2], args[3]);
         }
         return null;
     }
@@ -369,15 +370,19 @@ function initElementDrag(el, listeners) {
         if (listeners.end) {
             listeners.end.call(listeners.ctx, evt);
         }
-        unEvent(doc, 'mousemove', onMouseMove);
-        unEvent(doc, 'mouseup', onMouseUp);
+        unEvent(doc, {
+            mousemove: onMouseMove,
+            mouseup: onMouseUp
+        });
     }
 
     onEvent(el, 'mousedown', function(evt) {
         lastPoint = evt.getPoint();
         if (!listeners.start || listeners.start.call(listeners.ctx, evt) !== false) {
-            $E.on(doc, 'mousemove', onMouseMove);
-            $E.on(doc, 'mouseup', onMouseUp);
+            onEvent(doc, {
+                mousemove: onMouseMove,
+                mouseup: onMouseUp
+            });
             evt.stop();
         }
     });
