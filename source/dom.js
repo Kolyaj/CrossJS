@@ -177,11 +177,15 @@ function classNameExists(el, className) {
  *
  * @param {Node/String} el Элемент или его id.
  * @param {String} className Имя добавляемого класса.
+ *
+ * @return {Boolean} true, если класса не было и он добавился, иначе false.
  */
 function addClassName(el, className) {
     if (!classNameExists(el, className)) {
         $(el).className += ' ' + className;
+        return true;
     }
+    return false;
 }
 //#endlabel addClassName
 
@@ -193,15 +197,44 @@ function addClassName(el, className) {
  *
  * @param {Node/String} el Элемент или его id.
  * @param {String} className Имя удаляемого класса.
+ *
+ * @return {Boolean} true, если класс был и он удалился, иначе false.
  */
 function removeClassName(el, className) {
     el = $(el);
     var newClassName = el.className.replace(new RegExp('(^|\\s)' + className + '(?=\\s|$)', 'g'), ' ');
     if (newClassName != el.className) {
         el.className = newClassName;
+        return true;
     }
+    return false;
 }
 //#endlabel removeClassName
+
+
+//#label toggleClassName
+//#include ::addClassName::removeClassName::classNameExists
+/**
+ * Добавляет/удаляет CSS-класс className у элемента el в зависимости от параметра adding. Если adding не указан,
+ * то класс удаляется, если он есть, и добавляется, если его нет.
+ *
+ * @param {Node/String} el Элемент или его id.
+ * @param {String} className Имя CSS-класса.
+ * @param {Boolean} [adding] Добавить или удалить класс.
+ *
+ * @return {Boolean} true, если переключилось наличие класса, иначе false.
+ */
+function toggleClassName(el, className, adding) {
+    if (arguments.length < 3) {
+        adding = !classNameExists(el, className);
+    }
+    if (adding) {
+        return addClassName(el, className);
+    } else {
+        return removeClassName(el, className);
+    }
+}
+//#endlabel toggleClassName
 
 
 //#label getElementParent

@@ -19,9 +19,9 @@ var Component = Observer.inherit({
          * @type {Object}
          * Ссылка на объект, переданный при создании компонента.
          */
-        this.initialConfig = config || {};
-        Object.mixin(this, this.initialConfig);
-        this.initComponent();
+        this._initialConfig = config || {};
+        Object.mixin(this, this._initialConfig);
+        this._initComponent();
     },
 
     /**
@@ -29,6 +29,6 @@ var Component = Observer.inherit({
      * этот метод, тогда до вызова родительского initComponent, когда необходимо доопределить некоторые
      * параметры, конфигурационный объект, переданный в конструктор, будет уже скопирован в this.
      */
-    initComponent: function() {
+    _initComponent: function() {
     }
 });

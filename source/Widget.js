@@ -1,6 +1,6 @@
 //#include Component.js::base
 //#include dom.js::$::$$::onEvent::unEvent
-//#include lang/String.js::compile::uncamelize
+//#include lang/String.js::compile::uncamelize::trim
 //#include lang/Object.js::keys
 //#include lang/Array.js::map
 //#include css.js::base
@@ -48,26 +48,25 @@ var Widget = Component.inherit({
      */
     css: {},
 
-    initComponent: function() {
-        Widget.superclass.initComponent.apply(this, arguments);
+    _initComponent: function() {
+        Widget.superclass._initComponent.apply(this, arguments);
         if (this.renderTo) {
             this.renderTo = $(this.renderTo);
         }
         if (!this.doc) {
             this.doc = this.renderTo ? this.renderTo.ownerDocument : document;
         }
-        this.el = this.doc.createElement(this.tagName);
+        this._el = this.doc.createElement(this.tagName);
         if (this.className) {
-            this.el.className = this.grabPrototypeChain('className').join(' ');
+            this._el.className = this._grabPrototypeChain('className').join(' ');
         }
         if (this.html) {
-            this.el.innerHTML = this.applyTemplate(this.html);
+            this._el.innerHTML = this._applyTemplate(this.html);
         }
         if (this.renderTo) {
-            this.renderTo.appendChild(this.el);
+            this.renderTo.appendChild(this._el);
         }
-        this.elementsCache = {};
-        this.buildCss();
+        this._buildCss();
     },
 
     /**
@@ -79,6 +78,26 @@ var Widget = Component.inherit({
     },
 
     /**
+     * Возвращает первый DOM-элемент из виджета с соответствующим CSS-классом. Если класс не указан, возвращается
+     * корневой элемент.
+     *
+     * @param {String} className
+     * @param {Boolean} [force] Если true, то элемент ищется заново, а не берётся из кэша.
+     *
+     * @return {Node}
+     */
+    getEl: function(className, force) {
+        this.Widget$elementsCache = this.Widget$elementsCache || {};
+        if (className) {
+            if (!this.Widget$elementsCache[className] || force) {
+                this.Widget$elementsCache[className] = $$('!.' + className, this._el);
+            }
+            return this.Widget$elementsCache[className];
+        }
+        return this._el;
+    },
+
+    /**
      * Бежит по цепочке прототипов и собирает в них значения нужного свойства.
      *
      * @param {String} prop Имя свойства.
@@ -86,7 +105,7 @@ var Widget = Component.inherit({
      *
      * @return {Array} Массив значений переданного свойства из цепочки прототипов.
      */
-    grabPrototypeChain: function(prop, removeProps) {
+    _grabPrototypeChain: function(prop, removeProps) {
         var proto = this.constructor.prototype, result = [];
         while (proto != Widget.prototype) {
             if (proto.hasOwnProperty(prop)) {
@@ -103,33 +122,22 @@ var Widget = Component.inherit({
     /**
      * Компилирует и добавляет в документ CSS текущего виджета.
      */
-    buildCss: function() {
-        var cssText = this.grabPrototypeChain('css', true).reverse().map(function(css) {
-            return this.compileCSS(css);
-        }, this).join('');
-        var styleEl = this.doc.createElement('style');
-        styleEl.type = 'text/css';
-        if (styleEl.styleSheet) {
-            styleEl.styleSheet.cssText = cssText;
-        } else if (styleEl.innerText == '') {
-            styleEl.innerText = cssText;
-        } else {
-            styleEl.innerHTML = cssText;
+    _buildCss: function() {
+        var cssText = this._grabPrototypeChain('css', true).reverse().map(function(css) {
+            return this._compileCSSRule('', css);
+        }, this).join('').trim();
+        if (cssText) {
+            var styleEl = this.doc.createElement('style');
+            styleEl.type = 'text/css';
+            if (styleEl.styleSheet) {
+                styleEl.styleSheet.cssText = cssText;
+            } else if (styleEl.innerText == '') {
+                styleEl.innerText = cssText;
+            } else {
+                styleEl.innerHTML = cssText;
+            }
+            this.doc.getElementsByTagName('head')[0].appendChild(styleEl);
         }
-        this.doc.getElementsByTagName('head')[0].appendChild(styleEl);
-    },
-
-    /**
-     * Компилирует в строку переданные CSS селекторы.
-     *
-     * @param {Object} selectors
-     *
-     * @return {String}
-     */
-    compileCSS: function(selectors) {
-        return Object.keys(selectors).map(function(selector) {
-            return this.compileCSSRule(selector, selectors[selector]);
-        }, this).join('');
     },
 
     /**
@@ -140,12 +148,20 @@ var Widget = Component.inherit({
      *
      * @return {String}
      */
-    compileCSSRule: function(rule, properties) {
+    _compileCSSRule: function(rule, properties) {
         var cascades = [];
         return '${0} {\n${1}}\n'.format(rule, Object.keys(properties).map(function(property) {
             var value = properties[property];
             if (typeof value == 'object') {
-                cascades.push(this.compileCSSRule(rule + ' ' + property, value));
+                if (/^[?^] /.test(property)) {
+                    var propertySupported = typeof this.doc.documentElement.style[normalizeCSSProperty(property.substr(2), '')[0]] == 'string';
+                    var isValidSelector = (property.charAt(0) == '?' && propertySupported) || (property.charAt(0) == '^' && !propertySupported);
+                    if (isValidSelector) {
+                        cascades.push(this._compileCSSRule(rule, value));
+                    }
+                } else {
+                    cascades.push(this._compileCSSRule(rule + ' ' + property, value));
+                }
                 return '';
             } else {
                 var propname = normalizeCSSProperty(property, String(value).format(this));
@@ -161,26 +177,7 @@ var Widget = Component.inherit({
      *
      * @return {String}
      */
-    applyTemplate: function(tpl) {
+    _applyTemplate: function(tpl) {
         return tpl ? tpl.compile().call(this) : '';
-    },
-
-    /**
-     * Возвращает первый DOM-элемент из виджета с соответствующим CSS-классом. Если класс не указан, возвращается
-     * корневой элемент.
-     *
-     * @param {String} className
-     * @param {Boolean} [force] Если true, то элемент ищется заново, а не берётся из кэша.
-     *
-     * @return {Node}
-     */
-    getEl: function(className, force) {
-        if (className) {
-            if (!this.elementsCache[className] || force) {
-                this.elementsCache[className] = $$('!.' + className, this.el);
-            }
-            return this.elementsCache[className];
-        }
-        return this.el;
     }
 });

@@ -14,6 +14,9 @@
                     dst[prop] = arguments[i][prop];
                 }
             }
+            if (arguments[i].hasOwnProperty('toString')) {
+                dst['toString'] = arguments[i]['toString'];
+            }
         }
         return dst;
     };

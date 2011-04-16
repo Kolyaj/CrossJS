@@ -7,7 +7,7 @@
  * Класс, предоставляющий интерфейс для генерации событий и для добавления слушателей. Нет никакого жесткого
  * списка событий, которые может генерировать данный класс. Типом события является обычная строка.
  * Подписчики вызываются в обратном порядке, в котором они были подписаны. Если в одном из обработчиков
- * произойдет ошибка, вызовется метод {@link Observer.handleListenerError} текущего обсервера, которому будет передан
+ * произойдет ошибка, вызовется метод {@link Observer._handleListenerError} текущего обсервера, которому будет передан
  * объект ошибки, остальные обработчики будут вызваны в штатном режиме.
  * Подписчикам передается объект класса {@link Observer.Event}, обязательными свойствами которого являются
  * target (источник события) и name (имя события), а также метод stop, прерывающий дальнейшую обработку. Также
@@ -18,7 +18,7 @@ var Observer = Object.inherit({
      * @constructor
      */
     constructor: function() {
-        this.listeners = {};
+        this.Observer$listeners = {};
     },
 
     /**
@@ -28,8 +28,8 @@ var Observer = Object.inherit({
      * @param {Function} fn Фукнция, вызываемая при возникновении события.
      */
     addEventListener: function(name, fn) {
-        this.listeners[name] = this.listeners[name] || [];
-        this.listeners[name].unshift(fn);
+        this.Observer$listeners[name] = this.Observer$listeners[name] || [];
+        this.Observer$listeners[name].unshift(fn);
     },
 
     /**
@@ -38,10 +38,10 @@ var Observer = Object.inherit({
      * @param {Function} fn Подписанный обработчик.
      */
     removeEventListener: function(name, fn) {
-        if (this.listeners[name]) {
-            for (var i = 0; i < this.listeners.length; i++) {
-                if (this.listeners[i] == fn) {
-                    this.listeners.splice(i, 1);
+        if (this.Observer$listeners[name]) {
+            for (var i = 0; i < this.Observer$listeners.length; i++) {
+                if (this.Observer$listeners[i] == fn) {
+                    this.Observer$listeners.splice(i, 1);
                     return;
                 }
             }
@@ -57,13 +57,13 @@ var Observer = Object.inherit({
      * @return {Boolean} false, если событие было остановлено, иначе true.
      */
     fireEvent: function(name, data) {
-        if (this.listeners[name] || this.listeners['*']) {
+        if (this.Observer$listeners[name] || this.Observer$listeners['*']) {
             var evt = new Observer.Event(this, name, data);
-            return !(this.listeners[name] || []).concat(this.listeners['*'] || []).some(function(fn) {
+            return !(this.Observer$listeners[name] || []).concat(this.Observer$listeners['*'] || []).some(function(fn) {
                 try {
                     fn.call(this, evt);
                 } catch (e) {
-                    this.handleListenerError(e);
+                    this._handleListenerError(e);
                 }
                 return evt.stopped;
             }, this);
@@ -77,7 +77,7 @@ var Observer = Object.inherit({
      *
      * @param {Error} err Объект ошибки.
      */
-    handleListenerError: function(err) {
+    _handleListenerError: function(err) {
         setTimeout(function() { throw err; }, 10);
     }
 });
