@@ -18,7 +18,7 @@ var Observer = Object.inherit({
      * @constructor
      */
     constructor: function() {
-        this.Observer$listeners = {};
+        this.Observer__listeners = {};
     },
 
     /**
@@ -28,8 +28,8 @@ var Observer = Object.inherit({
      * @param {Function} fn Фукнция, вызываемая при возникновении события.
      */
     addEventListener: function(name, fn) {
-        this.Observer$listeners[name] = this.Observer$listeners[name] || [];
-        this.Observer$listeners[name].unshift(fn);
+        this.Observer__listeners[name] = this.Observer__listeners[name] || [];
+        this.Observer__listeners[name].unshift(fn);
     },
 
     /**
@@ -38,10 +38,10 @@ var Observer = Object.inherit({
      * @param {Function} fn Подписанный обработчик.
      */
     removeEventListener: function(name, fn) {
-        if (this.Observer$listeners[name]) {
-            for (var i = 0; i < this.Observer$listeners.length; i++) {
-                if (this.Observer$listeners[i] == fn) {
-                    this.Observer$listeners.splice(i, 1);
+        if (this.Observer__listeners[name]) {
+            for (var i = 0; i < this.Observer__listeners.length; i++) {
+                if (this.Observer__listeners[i] == fn) {
+                    this.Observer__listeners.splice(i, 1);
                     return;
                 }
             }
@@ -57,9 +57,9 @@ var Observer = Object.inherit({
      * @return {Boolean} false, если событие было остановлено, иначе true.
      */
     fireEvent: function(name, data) {
-        if (this.Observer$listeners[name] || this.Observer$listeners['*']) {
+        if (this.Observer__listeners[name] || this.Observer__listeners['*']) {
             var evt = new Observer.Event(this, name, data);
-            return !(this.Observer$listeners[name] || []).concat(this.Observer$listeners['*'] || []).some(function(fn) {
+            return !(this.Observer__listeners[name] || []).concat(this.Observer__listeners['*'] || []).some(function(fn) {
                 try {
                     fn.call(this, evt);
                 } catch (e) {

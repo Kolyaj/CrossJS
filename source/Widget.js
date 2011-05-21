@@ -1,5 +1,5 @@
 //#include Component.js::base
-//#include dom.js::$::$$::onEvent::unEvent
+//#include dom.js::$::$$::onEvent::unEvent::removeElement
 //#include lang/String.js::compile::uncamelize::trim
 //#include lang/Object.js::keys
 //#include lang/Array.js::map
@@ -87,12 +87,12 @@ var Widget = Component.inherit({
      * @return {Node}
      */
     getEl: function(className, force) {
-        this.Widget$elementsCache = this.Widget$elementsCache || {};
+        this.Widget__elementsCache = this.Widget__elementsCache || {};
         if (className) {
-            if (!this.Widget$elementsCache[className] || force) {
-                this.Widget$elementsCache[className] = $$('!.' + className, this._el);
+            if (!this.Widget__elementsCache[className] || force) {
+                this.Widget__elementsCache[className] = $$('!.' + className, this._el);
             }
-            return this.Widget$elementsCache[className];
+            return this.Widget__elementsCache[className];
         }
         return this._el;
     },
@@ -106,7 +106,8 @@ var Widget = Component.inherit({
      * @return {Array} Массив значений переданного свойства из цепочки прототипов.
      */
     _grabPrototypeChain: function(prop, removeProps) {
-        var proto = this.constructor.prototype, result = [];
+        var result = this.hasOwnProperty(prop) ? [this[prop]] : [];
+        var proto = this.constructor.prototype;
         while (proto != Widget.prototype) {
             if (proto.hasOwnProperty(prop)) {
                 result.push(proto[prop]);

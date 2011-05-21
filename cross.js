@@ -1253,10 +1253,10 @@ var JSON = JSON || new function() {
     String_prototype.compile = function() {
         var resultVarName = '$_' + Math.round(Math.random() * 1e5);
         var body = 'var ${0}=[];'.format(resultVarName);
-        body += this.replace(/(<%(=)?(.*?)%>)|([\s\S]+?(?=(<%|$)))/g, function(wholeMatch, tag, assign, tagValue) {
+        body += this.replace(/(<%((&)?=)?(.*?)%>)|([\s\S]+?(?=(<%|$)))/g, function(wholeMatch, tag, assign, escape, tagValue) {
             if (tag) {
                 if (assign) {
-                    return '${0}.push(${1});'.format(resultVarName, tagValue);
+                    return (escape ? '${0}.push(new String(${1}).escapeHTML());' : '${0}.push(${1});').format(resultVarName, tagValue);
                 } else {
                     return '${0}\n'.format(tagValue);
                 }
@@ -1342,7 +1342,7 @@ var Observer = Object.inherit({
      * @constructor
      */
     constructor: function() {
-        this.listeners = {};
+        this.Observer__listeners = {};
     },
 
     /**
@@ -1352,8 +1352,8 @@ var Observer = Object.inherit({
      * @param {Function} fn Фукнция, вызываемая при возникновении события.
      */
     addEventListener: function(name, fn) {
-        this.listeners[name] = this.listeners[name] || [];
-        this.listeners[name].unshift(fn);
+        this.Observer__listeners[name] = this.Observer__listeners[name] || [];
+        this.Observer__listeners[name].unshift(fn);
     },
 
     /**
@@ -1362,10 +1362,10 @@ var Observer = Object.inherit({
      * @param {Function} fn Подписанный обработчик.
      */
     removeEventListener: function(name, fn) {
-        if (this.listeners[name]) {
-            for (var i = 0; i < this.listeners.length; i++) {
-                if (this.listeners[i] == fn) {
-                    this.listeners.splice(i, 1);
+        if (this.Observer__listeners[name]) {
+            for (var i = 0; i < this.Observer__listeners.length; i++) {
+                if (this.Observer__listeners[i] == fn) {
+                    this.Observer__listeners.splice(i, 1);
                     return;
                 }
             }
@@ -1381,9 +1381,9 @@ var Observer = Object.inherit({
      * @return {Boolean} false, если событие было остановлено, иначе true.
      */
     fireEvent: function(name, data) {
-        if (this.listeners[name] || this.listeners['*']) {
+        if (this.Observer__listeners[name] || this.Observer__listeners['*']) {
             var evt = new Observer.Event(this, name, data);
-            return !(this.listeners[name] || []).concat(this.listeners['*'] || []).some(function(fn) {
+            return !(this.Observer__listeners[name] || []).concat(this.Observer__listeners['*'] || []).some(function(fn) {
                 try {
                     fn.call(this, evt);
                 } catch (e) {
@@ -1712,11 +1712,15 @@ function classNameExists(el, className) {
  *
  * @param {Node/String} el Элемент или его id.
  * @param {String} className Имя добавляемого класса.
+ *
+ * @return {Boolean} true, если класса не было и он добавился, иначе false.
  */
 function addClassName(el, className) {
     if (!classNameExists(el, className)) {
         $(el).className += ' ' + className;
+        return true;
     }
+    return false;
 }
 
 
@@ -1725,24 +1729,38 @@ function addClassName(el, className) {
  *
  * @param {Node/String} el Элемент или его id.
  * @param {String} className Имя удаляемого класса.
+ *
+ * @return {Boolean} true, если класс был и он удалился, иначе false.
  */
 function removeClassName(el, className) {
     el = $(el);
     var newClassName = el.className.replace(new RegExp('(^|\\s)' + className + '(?=\\s|$)', 'g'), ' ');
     if (newClassName != el.className) {
         el.className = newClassName;
+        return true;
     }
+    return false;
 }
 
 
+/**
+ * Добавляет/удаляет CSS-класс className у элемента el в зависимости от параметра adding. Если adding не указан,
+ * то класс удаляется, если он есть, и добавляется, если его нет.
+ *
+ * @param {Node/String} el Элемент или его id.
+ * @param {String} className Имя CSS-класса.
+ * @param {Boolean} [adding] Добавить или удалить класс.
+ *
+ * @return {Boolean} true, если переключилось наличие класса, иначе false.
+ */
 function toggleClassName(el, className, adding) {
     if (arguments.length < 3) {
         adding = !classNameExists(el, className);
     }
     if (adding) {
-        addClassName(el, className);
+        return addClassName(el, className);
     } else {
-        removeClassName(el, className);
+        return removeClassName(el, className);
     }
 }
 
@@ -2117,12 +2135,12 @@ var Widget = Component.inherit({
      * @return {Node}
      */
     getEl: function(className, force) {
-        this.Widget$elementsCache = this.Widget$elementsCache || {};
+        this.Widget__elementsCache = this.Widget__elementsCache || {};
         if (className) {
-            if (!this.Widget$elementsCache[className] || force) {
-                this.Widget$elementsCache[className] = $$('!.' + className, this._el);
+            if (!this.Widget__elementsCache[className] || force) {
+                this.Widget__elementsCache[className] = $$('!.' + className, this._el);
             }
-            return this.Widget$elementsCache[className];
+            return this.Widget__elementsCache[className];
         }
         return this._el;
     },
@@ -2136,7 +2154,8 @@ var Widget = Component.inherit({
      * @return {Array} Массив значений переданного свойства из цепочки прототипов.
      */
     _grabPrototypeChain: function(prop, removeProps) {
-        var proto = this.constructor.prototype, result = [];
+        var result = this.hasOwnProperty(prop) ? [this[prop]] : [];
+        var proto = this.constructor.prototype;
         while (proto != Widget.prototype) {
             if (proto.hasOwnProperty(prop)) {
                 result.push(proto[prop]);

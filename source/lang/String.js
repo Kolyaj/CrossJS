@@ -369,7 +369,7 @@
     //#endlabel toFragment
 
     //#label compile
-    //#include ::format
+    //#include ::format::escapeHTML
     /**
      * Компилирует строку, содержащую шаблон, в функцию, этот шаблон применяющую к своему контексту.
      * Шаблон понимает два вида тегов:
@@ -383,10 +383,10 @@
     String_prototype.compile = function() {
         var resultVarName = '$_' + Math.round(Math.random() * 1e5);
         var body = 'var ${0}=[];'.format(resultVarName);
-        body += this.replace(/(<%(=)?(.*?)%>)|([\s\S]+?(?=(<%|$)))/g, function(wholeMatch, tag, assign, tagValue) {
+        body += this.replace(/(<%((&)?=)?(.*?)%>)|([\s\S]+?(?=(<%|$)))/g, function(wholeMatch, tag, assign, escape, tagValue) {
             if (tag) {
                 if (assign) {
-                    return '${0}.push(${1});'.format(resultVarName, tagValue);
+                    return (escape ? '${0}.push(new String(${1}).escapeHTML());' : '${0}.push(${1});').format(resultVarName, tagValue);
                 } else {
                     return '${0}\n'.format(tagValue);
                 }
