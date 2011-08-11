@@ -318,9 +318,8 @@ function onEvent(el, event, fn, ctx) {
     var listeners = processEventArguments(arguments);
     if (listeners) {
         el = $(el);
-        var win = getWindow(el.ownerDocument || el);
         var handler = function(evt) {
-            evt = evt || win.event;
+            evt = evt || window.event;
             if (typeof EventObject == 'object') {
                 Object.mixin(evt, EventObject);
             }
