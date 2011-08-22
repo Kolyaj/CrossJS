@@ -72,7 +72,7 @@
          * @return {Array} Результирующий массив.
          */
         Array_prototype.map = function(fn, ctx) {
-            var result = [];
+            var result = new Array(this.length);
             for (var i = 0, l = this.length; i < l; i++) {
                 if (i in this) {
                     result[i] = fn.call(ctx, this[i], i, this);
@@ -388,6 +388,7 @@
             this[num] = this[i];
             this[i] = d;
         }
+        return this;
     };
     //#endlabel shuffle
 
