@@ -65,7 +65,7 @@
          * @return {Array} Результирующий массив.
          */
         Array_prototype.map = function(fn, ctx) {
-            var result = [];
+            var result = new Array(this.length);
             for (var i = 0, l = this.length; i < l; i++) {
                 if (i in this) {
                     result[i] = fn.call(ctx, this[i], i, this);
@@ -345,6 +345,7 @@
             this[num] = this[i];
             this[i] = d;
         }
+        return this;
     };
 
     /**
@@ -1838,9 +1839,8 @@ function onEvent(el, event, fn, ctx) {
     var listeners = processEventArguments(arguments);
     if (listeners) {
         el = $(el);
-        var win = getWindow(el.ownerDocument || el);
         var handler = function(evt) {
-            evt = evt || win.event;
+            evt = evt || window.event;
             if (typeof EventObject == 'object') {
                 Object.mixin(evt, EventObject);
             }
@@ -2144,6 +2144,23 @@ var Widget = Component.inherit({
         }
         return this._el;
     },
+
+    /**
+     * Возвращает HTML-код виджета.
+     *
+     * @return {String}
+     */
+    getHTML: function() {
+        var parent = this.getEl().parentNode;
+        var tmpParent = this.doc.createElement('div');
+        tmpParent.appendChild(this.getEl());
+        var html = tmpParent.innerHTML;
+        if (parent) {
+            parent.appendChild(this.getEl());
+        }
+        return html;
+    },
+
 
     /**
      * Бежит по цепочке прототипов и собирает в них значения нужного свойства.
