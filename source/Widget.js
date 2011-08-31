@@ -98,6 +98,23 @@ var Widget = Component.inherit({
     },
 
     /**
+     * Возвращает HTML-код виджета.
+     *
+     * @return {String}
+     */
+    getHTML: function() {
+        var parent = this.getEl().parentNode;
+        var tmpParent = this.doc.createElement('div');
+        tmpParent.appendChild(this.getEl());
+        var html = tmpParent.innerHTML;
+        if (parent) {
+            parent.appendChild(this.getEl());
+        }
+        return html;
+    },
+
+
+    /**
      * Бежит по цепочке прототипов и собирает в них значения нужного свойства.
      *
      * @param {String} prop Имя свойства.
