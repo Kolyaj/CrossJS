@@ -1,4 +1,16 @@
 (function(Date, Date_prototype) {
+    //#label now
+    /**
+     * Возвращает количество милисекунд, прошедших с полуночи 01 января 1970 года GMT+0.
+	 * (timestamp)
+     *
+     * @return {Number}
+     */
+    Date.now = function() {
+		return +new Date;
+    };
+    //#endlabel now
+
     //#label clone
     /**
      * Клонирует объект даты.
